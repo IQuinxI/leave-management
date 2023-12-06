@@ -20,32 +20,34 @@ public class LoadDataBase {
     CommandLineRunner loadData(EmployeeRepository employeeRepository) {
         return args -> {
 
-            
             employeeRepository.save(Employee.builder()
-                .firstName("firstname1")
-                .lastName("lastname1")
-                .phone("069729387")
-                .soldePaye(20)
-                .soldeNonPaye(100)
-                .soldeMaternité(100)
-                .soldeMaladie(10)
-                .salire(BigDecimal.valueOf(10000))
-                .poste("poste1")
-                .build()
-            );
+                    .firstName("firstname1")
+                    .lastName("lastname1")
+                    .phone("069729387")
+                    .soldePaye(20)
+                    .soldeNonPaye(100)
+                    .soldeMaternité(100)
+                    .soldeMaladie(10)
+                    .salire(BigDecimal.valueOf(10000))
+                    .poste("poste1")
+                    .email("email1@gmail.com")
+                    .password("password1")
+                    .build());
 
-              employeeRepository.save(Employee.builder()
-                .firstName("firstname2")
-                .lastName("lastname2")
-                .phone("069872312")
-                .soldePaye(15)
-                .soldeNonPaye(10)
-                .soldeMaternité(75)
-                .soldeMaladie(5)
-                .salire(BigDecimal.valueOf(5000))
-                .poste("poste2")
-                .build()
-            );
+            employeeRepository.save(Employee.builder()
+                    .firstName("firstname2")
+                    .lastName("lastname2")
+                    .phone("069872312")
+                    .soldePaye(15)
+                    .soldeNonPaye(10)
+                    .soldeMaternité(75)
+                    .soldeMaladie(5)
+                    .salire(BigDecimal.valueOf(5000))
+                    .poste("poste2")
+                    .email("email2@gmail.com")
+                    .password("password2")
+
+                    .build());
         };
     }
 
