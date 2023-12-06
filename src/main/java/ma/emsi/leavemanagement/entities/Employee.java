@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Employee
@@ -18,10 +20,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
+@SuperBuilder
+// @ToString
+
 public class Employee extends Person{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // private Long id;
     private String poste;
 }

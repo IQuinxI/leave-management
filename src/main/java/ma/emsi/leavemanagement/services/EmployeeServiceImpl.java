@@ -13,11 +13,12 @@ import lombok.AllArgsConstructor;
 import ma.emsi.leavemanagement.assemblers.EmployeeAssembler;
 import ma.emsi.leavemanagement.controllers.EmployeeControllerImpl;
 import ma.emsi.leavemanagement.entities.Employee;
+import ma.emsi.leavemanagement.exceptions.EmployeeNotFoundException;
 import ma.emsi.leavemanagement.repositories.EmployeeRepository;
-
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 /**
  * EmployeeServiceImpl
  */
@@ -57,20 +58,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public CollectionModel<EntityModel<Employee>> getEmployees() {
-        List<EntityModel<Employee>> employeesCollectionModel =  employeeRepository
-        .findAll()
-        .stream()
-        .map(employeeAssembler::toModel)
-        .collect(Collectors.toList());
+        List<EntityModel<Employee>> employeesCollectionModel = employeeRepository
+                .findAll()
+                .stream()
+                .map(employeeAssembler::toModel)
+                .collect(Collectors.toList());
 
-        return CollectionModel.of(employeesCollectionModel, 
-        linkTo(methodOn(EmployeeControllerImpl.class).getEmployees()).withSelfRel());
+        return CollectionModel.of(employeesCollectionModel,
+                linkTo(methodOn(EmployeeControllerImpl.class).getEmployees()).withSelfRel());
     }
 
     @Override
     public EntityModel<Employee> getEmployee(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEmployee'");
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
+
+        return employeeAssembler.toModel(employee);
     }
 
 }
