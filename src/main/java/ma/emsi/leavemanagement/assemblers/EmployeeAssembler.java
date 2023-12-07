@@ -4,7 +4,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import ma.emsi.leavemanagement.controllers.EmployeeController;
 import ma.emsi.leavemanagement.controllers.EmployeeControllerImpl;
 import ma.emsi.leavemanagement.entities.Employee;
 
@@ -21,7 +20,6 @@ public class EmployeeAssembler implements RepresentationModelAssembler<Employee,
     @Override
     public EntityModel<Employee> toModel(Employee employee) {
         return EntityModel.of(employee, 
-        // TODO: change the hardcoded id with 'employee.getId()'
         linkTo(methodOn(EmployeeControllerImpl.class).getOneEmployee(employee.getId())).withSelfRel(),
         linkTo(methodOn(EmployeeControllerImpl.class).getEmployees()).withRel("Employees")
         );
