@@ -2,6 +2,9 @@ package ma.emsi.leavemanagement.utils;
 
 import java.math.BigDecimal;
 
+import ma.emsi.leavemanagement.entities.auth.Role;
+import ma.emsi.leavemanagement.entities.auth.Userr;
+import ma.emsi.leavemanagement.repositories.auth.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import jakarta.transaction.Transactional;
 import ma.emsi.leavemanagement.entities.Employee;
 import ma.emsi.leavemanagement.repositories.EmployeeRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * LoadDataBase
@@ -46,8 +50,17 @@ public class LoadDataBase {
                     .poste("poste2")
                     .email("email2@gmail.com")
                     .password("password2")
-
                     .build());
+        };
+    }
+
+    @Bean
+    CommandLineRunner run(UserRepository repository, PasswordEncoder passwordEncoder){
+        return args -> {
+            repository.save(new Userr(1L, "user@gmail.com", passwordEncoder.encode("user"), Role.USER));
+            repository.save(new Userr(2L, "wafa@gmail.com", passwordEncoder.encode("123"), Role.USER));
+            repository.save(new Userr(2L, "ad@gmail.com", passwordEncoder.encode("admin"), Role.ADMIN));
+
         };
     }
 
