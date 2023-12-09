@@ -18,6 +18,7 @@ import ma.emsi.leavemanagement.entities.Employee;
 import ma.emsi.leavemanagement.exceptions.EmployeeNotFoundException;
 import ma.emsi.leavemanagement.exceptions.EmployeePasswordIsEmptyException;
 import ma.emsi.leavemanagement.repositories.EmployeeRepository;
+import ma.emsi.leavemanagement.utils.EmailServiceImpl;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -32,6 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeAssembler employeeAssembler;
+    private final EmailServiceImpl emailServiceImpl;
 
     @Override
     public ResponseEntity<?> replaceEmployee(Employee newEmployee) {
@@ -94,6 +96,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         // employeeRepository.save(employee);
 
         EntityModel<Employee> employeeEntityModel = employeeAssembler.toModel(employee);
+
+        emailServiceImpl.sendPasswordVerificationEmail("aqwzsxcv123@gmail.com", "Password Reset", """
+                Hello User,
+                This is a test of the Leave management system.
+                Would you kindly ignore this message.
+                I'm surprised you read this far.
+                
+                """);
 
         return ResponseEntity
                 .created(employeeEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
