@@ -52,7 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                                         employee.setSoldeNonPaye(newEmployee.getSoldeNonPaye());
                                         employee.setSoldeMaternité(newEmployee.getSoldeMaternité());
                                         employee.setSoldeMaladie(newEmployee.getSoldeMaladie());
-                                        employee.setSalire(newEmployee.getSalire());
+                                        employee.setSalary(newEmployee.getSalary());
                                         employee.setPoste(newEmployee.getPoste());
 
                                         return employeeRepository.save(employee);
@@ -91,13 +91,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         @Override
         public ResponseEntity<?> resetPassword(InputUserDto inputUserDto) {
 
-                // retrieves the email from the json load {"email": "xxxxxx@xxxx.xxx"}
+                // retrieves the email from the InputUserDto {"email": "xxxxxx@xxxx.xxx", "password": "xxxxxxxx"}
                 String emailValue = inputUserDto.getEmail().trim();
+                String password = inputUserDto.getPassword().trim();
 
                 // checks if the value is empty or Null
                 // TODO: add a util class to check multiple variables (respect OCP)
-                if (emailValue.isEmpty() || emailValue == null)
-                        throw new FieldIsEmptyOrNullException("email");
+                if ((emailValue.isBlank() || emailValue == null) || (password.isBlank() || password == null))
+                        throw new FieldIsEmptyOrNullException();
 
                 // find the user account by email, if it doesn't exist return a
                 // "EmployeeNotFoundException"
@@ -105,6 +106,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                                 .orElseThrow(() -> new EmployeeNotFoundException());
 
                 userAccount.setPassword(passwordEncoder.encode(inputUserDto.getPassword()));
+                // userAccount.setPassword(password);
 
                 // find the employee by account, if they don't exist return a
                 // "EmployeeNotFoundException"
@@ -112,16 +114,16 @@ public class EmployeeServiceImpl implements EmployeeService {
                                 .orElseThrow(() -> new EmployeeNotFoundException());
 
                 EntityModel<Employee> employeeEntityModel = employeeAssembler.toModel(employee);
-
+                
                 // sends an email to the User
                 // TODO: run this on a different Thread to not stop the app
-                emailServiceImpl.sendPasswordVerificationEmail("aqwzsxcv123@gmail.com", "Password Reset", """
-                                Hello User,
-                                This is a test of the Leave management system.
-                                Would you kindly ignore this message.
-                                I'm surprised you read this far.
+                // emailServiceImpl.sendPasswordVerificationEmail("aqwzsxcv123@gmail.com", "Password Reset", """
+                //                 Hello User,
+                //                 This is a test of the Leave management system.
+                //                 Would you kindly ignore this message.
+                //                 I'm surprised you read this far.
 
-                                """);
+                //                 """);
 
                 // return a response of the updated code
                 // the employee is being returned instead of the user for security reasons

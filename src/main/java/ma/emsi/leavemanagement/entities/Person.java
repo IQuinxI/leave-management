@@ -2,6 +2,8 @@ package ma.emsi.leavemanagement.entities;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,7 +37,8 @@ public abstract class Person {
     private int soldeNonPaye;
     private int soldeMaternité;
     private int soldeMaladie;
-    private BigDecimal salire;
+    private BigDecimal salary;
+    // @JsonIgnore
     @OneToOne
     private Userr userAccount;
 }

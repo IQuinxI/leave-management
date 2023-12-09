@@ -23,6 +23,7 @@ public class SecurityConfig {
             "/h2-console/**",
             ".../",
             "/api/v1/employees",
+            "/api/v1/employees/**",
             "ADD ENDPOINTS HERE, WHERE AUTH NOT NEEDED"
     };
     private final JwtAuthenticationFilter jwtAuthFilter;

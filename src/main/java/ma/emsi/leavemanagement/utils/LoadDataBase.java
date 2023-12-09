@@ -38,7 +38,7 @@ public class LoadDataBase {
                     .soldeNonPaye(100)
                     .soldeMaternité(100)
                     .soldeMaladie(10)
-                    .salire(BigDecimal.valueOf(10000))
+                    .salary(BigDecimal.valueOf(10000))
                     .poste("poste1")
                     .userAccount(userRepository.findById(1l).get())
                     .build());
@@ -51,7 +51,7 @@ public class LoadDataBase {
                     .soldeNonPaye(10)
                     .soldeMaternité(75)
                     .soldeMaladie(5)
-                    .salire(BigDecimal.valueOf(5000))
+                    .salary(BigDecimal.valueOf(5000))
                     .poste("poste2")
                     .userAccount(userRepository.findById(2l).get())
                     .build());
