@@ -21,9 +21,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class LoadDataBase {
     @Transactional
     @Bean
-    CommandLineRunner loadData(EmployeeRepository employeeRepository) {
+    CommandLineRunner loadData(EmployeeRepository employeeRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
 
+            // initializes the user accounts
+            userRepository.save(new Userr(1L, "user@gmail.com", passwordEncoder.encode("user"), Role.USER));
+            userRepository.save(new Userr(2L, "wafa@gmail.com", passwordEncoder.encode("123"), Role.USER));
+            userRepository.save(new Userr(3L, "ad@gmail.com", passwordEncoder.encode("admin"), Role.ADMIN));
+
+            // initializes the employees accounts
             employeeRepository.save(Employee.builder()
                     .firstName("firstname1")
                     .lastName("lastname1")
@@ -34,8 +40,7 @@ public class LoadDataBase {
                     .soldeMaladie(10)
                     .salire(BigDecimal.valueOf(10000))
                     .poste("poste1")
-                    .email("email1@gmail.com")
-                    .password("password1")
+                    .userAccount(userRepository.findById(1l).get())
                     .build());
 
             employeeRepository.save(Employee.builder()
@@ -48,18 +53,8 @@ public class LoadDataBase {
                     .soldeMaladie(5)
                     .salire(BigDecimal.valueOf(5000))
                     .poste("poste2")
-                    .email("email2@gmail.com")
-                    .password("password2")
+                    .userAccount(userRepository.findById(2l).get())
                     .build());
-        };
-    }
-
-    @Bean
-    CommandLineRunner run(UserRepository repository, PasswordEncoder passwordEncoder){
-        return args -> {
-            repository.save(new Userr(1L, "user@gmail.com", passwordEncoder.encode("user"), Role.USER));
-            repository.save(new Userr(2L, "wafa@gmail.com", passwordEncoder.encode("123"), Role.USER));
-            repository.save(new Userr(2L, "ad@gmail.com", passwordEncoder.encode("admin"), Role.ADMIN));
 
         };
     }

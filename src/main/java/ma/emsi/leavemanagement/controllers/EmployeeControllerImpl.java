@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import ma.emsi.leavemanagement.dtos.InputUserDto;
 import ma.emsi.leavemanagement.entities.Employee;
 import ma.emsi.leavemanagement.services.EmployeeService;
 
@@ -21,7 +22,7 @@ import ma.emsi.leavemanagement.services.EmployeeService;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/employee")
+@RequestMapping("/api/v1/employees")
 public class EmployeeControllerImpl implements EmployeeController {
     private final EmployeeService employeeService;
 
@@ -45,7 +46,7 @@ public class EmployeeControllerImpl implements EmployeeController {
 
     @PostMapping("/{id}")
     @Override
-    public ResponseEntity<?> resetPassword(@PathVariable("id") Long id, @RequestBody Map<String, String> password) {
-        return employeeService.resetPassword(id, password);
+    public ResponseEntity<?> resetPassword(@RequestBody InputUserDto inputUserDto) {
+        return employeeService.resetPassword(inputUserDto);
     }
 }

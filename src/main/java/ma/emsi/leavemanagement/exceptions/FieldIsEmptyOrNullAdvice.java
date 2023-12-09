@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * EmployeePasswordNotFoundAdvice
  */
 @ControllerAdvice
-public class EmployeePasswordEmptyAdvice {
+public class FieldIsEmptyOrNullAdvice {
     @ResponseBody
-    @ExceptionHandler(EmployeePasswordIsEmptyException.class)
+    @ExceptionHandler(FieldIsEmptyOrNullException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String EmployeePasswordEmptyHandler(EmployeePasswordIsEmptyException ex) {
+    String EmployeePasswordEmptyHandler(FieldIsEmptyOrNullException ex) {
         return ex.getMessage();
     }
     

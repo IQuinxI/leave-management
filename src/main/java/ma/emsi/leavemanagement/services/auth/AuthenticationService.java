@@ -1,8 +1,8 @@
 package ma.emsi.leavemanagement.services.auth;
 
 import lombok.RequiredArgsConstructor;
-import ma.emsi.leavemanagement.dto.auth.AuthenticationRequest;
-import ma.emsi.leavemanagement.dto.auth.AuthenticationResponse;
+import ma.emsi.leavemanagement.dtos.auth.AuthenticationRequest;
+import ma.emsi.leavemanagement.dtos.auth.AuthenticationResponse;
 import ma.emsi.leavemanagement.repositories.auth.UserRepository;
 import ma.emsi.leavemanagement.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;

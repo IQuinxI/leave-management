@@ -8,8 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import ma.emsi.leavemanagement.entities.auth.Userr;
 
 /**
  * Person
@@ -29,12 +31,11 @@ public abstract class Person {
     private String firstName;
     private String lastName;
     private String phone;
-    private String email;
-    private String password;
     private int soldePaye;
     private int soldeNonPaye;
     private int soldeMaternité;
     private int soldeMaladie;
     private BigDecimal salire;
-
+    @OneToOne
+    private Userr userAccount;
 }

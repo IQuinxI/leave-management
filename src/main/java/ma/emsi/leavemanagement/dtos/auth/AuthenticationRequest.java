@@ -1,4 +1,4 @@
-package ma.emsi.leavemanagement.dto.auth;
+package ma.emsi.leavemanagement.dtos.auth;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

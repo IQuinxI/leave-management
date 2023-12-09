@@ -1,8 +1,8 @@
 package ma.emsi.leavemanagement.controllers.auth;
 
 import lombok.extern.slf4j.Slf4j;
-import ma.emsi.leavemanagement.dto.auth.AuthenticationRequest;
-import ma.emsi.leavemanagement.dto.auth.AuthenticationResponse;
+import ma.emsi.leavemanagement.dtos.auth.AuthenticationRequest;
+import ma.emsi.leavemanagement.dtos.auth.AuthenticationResponse;
 import ma.emsi.leavemanagement.services.auth.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
