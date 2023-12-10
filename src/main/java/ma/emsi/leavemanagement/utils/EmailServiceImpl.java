@@ -2,6 +2,7 @@ package ma.emsi.leavemanagement.utils;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ public class EmailServiceImpl {
 
     private final JavaMailSender mailSender;
 
+    @Async
     public void sendPasswordVerificationEmail(String to, String subject, String message) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("noreply@emsi.ma");

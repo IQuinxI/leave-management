@@ -38,6 +38,7 @@ public abstract class Person {
     private int soldeMaternité;
     private int soldeMaladie;
     private BigDecimal salary;
+    // TODO: uncomment JsonIgnore
     // @JsonIgnore
     @OneToOne
     private Userr userAccount;

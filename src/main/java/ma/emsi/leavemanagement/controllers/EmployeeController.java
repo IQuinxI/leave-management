@@ -1,6 +1,8 @@
 package ma.emsi.leavemanagement.controllers;
 
 
+import java.util.Map;
+
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
@@ -16,5 +18,8 @@ public interface EmployeeController {
     public ResponseEntity<?> replaceEmployee(Employee employee);
     public CollectionModel<EntityModel<Employee>> getEmployees();
     public EntityModel<Employee> getOneEmployee(Long id);
-    public ResponseEntity<?> resetPassword(InputUserDto inputUserDto);
+    public ResponseEntity<?> resetPassword(Map<String, String> email);
+    public ResponseEntity<?> verifyToken(String token);
+    public ResponseEntity<?> changePassword(InputUserDto inputUserDto, String token);
+    
 }

@@ -17,5 +17,8 @@ public interface EmployeeService {
     public ResponseEntity<?> replaceEmployee(Employee employee);
     public CollectionModel<EntityModel<Employee>> getEmployees();
     public EntityModel<Employee> getEmployee(Long id);
-    public ResponseEntity<?> resetPassword(InputUserDto inputUserDto);
+    public ResponseEntity<?> resetPassword(Map<String, String> email);
+    public ResponseEntity<?> verifyToken(String token);
+    public ResponseEntity<?> changePassword(InputUserDto inputUserDto, String token);
+    
 }

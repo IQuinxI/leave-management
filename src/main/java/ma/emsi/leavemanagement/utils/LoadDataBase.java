@@ -25,10 +25,24 @@ public class LoadDataBase {
         return args -> {
 
             // initializes the user accounts
-            userRepository.save(new Userr(1L, "user@gmail.com", passwordEncoder.encode("user"), Role.USER));
-            userRepository.save(new Userr(2L, "wafa@gmail.com", passwordEncoder.encode("123"), Role.USER));
-            userRepository.save(new Userr(3L, "ad@gmail.com", passwordEncoder.encode("admin"), Role.ADMIN));
+            userRepository.save(Userr.builder()
+            .email("user@gmail.com")
+            .password(passwordEncoder.encode("user"))
+            .role(Role.USER)
+            .build());
 
+            userRepository.save(Userr.builder()
+            .email("wafa@gmail.com")
+            .password(passwordEncoder.encode("123"))
+            .role(Role.USER)
+            .build());
+
+            userRepository.save(Userr.builder()
+            .email("ad@gmail.com")
+            .password(passwordEncoder.encode("admin"))
+            .role(Role.ADMIN)
+            .build());
+            
             // initializes the employees accounts
             employeeRepository.save(Employee.builder()
                     .firstName("firstname1")

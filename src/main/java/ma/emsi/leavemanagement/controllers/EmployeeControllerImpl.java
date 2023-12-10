@@ -1,6 +1,8 @@
 package ma.emsi.leavemanagement.controllers;
 
 
+import java.util.Map;
+
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
@@ -43,9 +46,21 @@ public class EmployeeControllerImpl implements EmployeeController {
         return employeeService.replaceEmployee(employee);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/password")
     @Override
-    public ResponseEntity<?> resetPassword(@RequestBody InputUserDto inputUserDto) {
-        return employeeService.resetPassword(inputUserDto);
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> email) {
+        return employeeService.resetPassword(email);
+    }
+
+    @GetMapping("/reset-password")
+    @Override
+    public ResponseEntity<?> verifyToken(@RequestParam("token") String token) {
+        return employeeService.verifyToken(token);
+    }
+
+    @PostMapping("/reset-password")
+    @Override
+    public ResponseEntity<?> changePassword(@RequestBody InputUserDto inputUserDto,@RequestParam("token") String token) {
+        return employeeService.changePassword(inputUserDto, token);        
     }
 }

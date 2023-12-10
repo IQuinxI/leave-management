@@ -24,6 +24,7 @@ public class SecurityConfig {
             ".../",
             "/api/v1/employees",
             "/api/v1/employees/**",
+            "/api/v1/employees/reset-password/**",
             "ADD ENDPOINTS HERE, WHERE AUTH NOT NEEDED"
     };
     private final JwtAuthenticationFilter jwtAuthFilter;

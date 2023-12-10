@@ -1,7 +1,11 @@
 package ma.emsi.leavemanagement.services;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.CollectionModel;
@@ -20,8 +24,10 @@ import ma.emsi.leavemanagement.entities.Employee;
 import ma.emsi.leavemanagement.entities.auth.Userr;
 import ma.emsi.leavemanagement.exceptions.EmployeeNotFoundException;
 import ma.emsi.leavemanagement.exceptions.FieldIsEmptyOrNullException;
+import ma.emsi.leavemanagement.exceptions.TokenExpiredException;
 import ma.emsi.leavemanagement.repositories.EmployeeRepository;
 import ma.emsi.leavemanagement.repositories.auth.UserRepository;
+import ma.emsi.leavemanagement.security.JwtService;
 import ma.emsi.leavemanagement.utils.EmailServiceImpl;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -40,6 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         private final EmployeeAssembler employeeAssembler;
         private final EmailServiceImpl emailServiceImpl;
         private final PasswordEncoder passwordEncoder;
+        
 
         @Override
         public ResponseEntity<?> replaceEmployee(Employee newEmployee) {
@@ -89,15 +96,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         @Override
-        public ResponseEntity<?> resetPassword(InputUserDto inputUserDto) {
+        public ResponseEntity<?> resetPassword(Map<String, String> email) {
 
-                // retrieves the email from the InputUserDto {"email": "xxxxxx@xxxx.xxx", "password": "xxxxxxxx"}
-                String emailValue = inputUserDto.getEmail().trim();
-                String password = inputUserDto.getPassword().trim();
+                // retrieves the email from the json {"email": "xxxxxx@xxxx.xxx"}
+                String emailValue = email.get("email").trim();
 
                 // checks if the value is empty or Null
                 // TODO: add a util class to check multiple variables (respect OCP)
-                if ((emailValue.isBlank() || emailValue == null) || (password.isBlank() || password == null))
+                if ((emailValue.isBlank() || emailValue == null))
                         throw new FieldIsEmptyOrNullException();
 
                 // find the user account by email, if it doesn't exist return a
@@ -105,16 +111,24 @@ public class EmployeeServiceImpl implements EmployeeService {
                 Userr userAccount = userRepository.findByEmail(emailValue)
                                 .orElseThrow(() -> new EmployeeNotFoundException());
 
-                userAccount.setPassword(passwordEncoder.encode(inputUserDto.getPassword()));
-                // userAccount.setPassword(password);
 
-                // find the employee by account, if they don't exist return a
-                // "EmployeeNotFoundException"
+
+                // TODO: generate token and send it via mail
+                // the token expires after 10 minutes
+
+                userAccount.setResetToken(UUID.randomUUID().toString());
+                userAccount.setResetTokenExpiryDate(Instant.now().plus(Duration.ofMinutes(10)));
+
+                // userAccount.setPassword(passwordEncoder.encode(inputUserDto.getPassword()));
+                // userAccount.setPassword(passwordEncoder.encode("test"));
+
+                // // find the employee by account, if they don't exist return a
+                // // "EmployeeNotFoundException"
                 Employee employee = employeeRepository.findByUserAccount(userAccount)
                                 .orElseThrow(() -> new EmployeeNotFoundException());
 
                 EntityModel<Employee> employeeEntityModel = employeeAssembler.toModel(employee);
-                
+                System.out.println("localhost:8080/api/v1/employees/reset-password?token="+userAccount.getResetToken());
                 // sends an email to the User
                 // TODO: run this on a different Thread to not stop the app
                 // emailServiceImpl.sendPasswordVerificationEmail("aqwzsxcv123@gmail.com", "Password Reset", """
@@ -128,6 +142,53 @@ public class EmployeeServiceImpl implements EmployeeService {
                 // return a response of the updated code
                 // the employee is being returned instead of the user for security reasons
                 return ResponseEntity
+                                .created(employeeEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                                .body(employeeEntityModel);
+        }
+
+        // This should be called when the reset page (the link in the email is cliked)
+        // is loaded for the user GET
+        @Override
+        public ResponseEntity<?> verifyToken(String token) {
+                //TODO: retrieve the user account using the token
+                Userr userAccount = userRepository.findByResetToken(token)
+                        .orElseThrow(() -> new EmployeeNotFoundException());
+
+                //TODO: check if the token has expired 
+                if(userAccount.getResetTokenExpiryDate().compareTo(Instant.now()) < 0) 
+                        throw new TokenExpiredException();
+
+                
+
+                Employee employee = employeeRepository.findByUserAccount(userAccount)
+                                .orElseThrow(() -> new EmployeeNotFoundException());
+
+                EntityModel<Employee> employeeEntityModel = employeeAssembler.toModel(employee);
+
+                 return ResponseEntity
+                                .created(employeeEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                                .body(employeeEntityModel);
+        }
+
+        // This method is called after the submission(POST)  
+        // it reverifies the cridentials and changes the password
+        @Override
+        public ResponseEntity<?> changePassword(InputUserDto inputUserDto, String token) {
+                Userr userAccount = userRepository.findByResetToken(token)
+                        .orElseThrow(() -> new EmployeeNotFoundException());
+
+                if(userAccount.getResetTokenExpiryDate().compareTo(Instant.now()) < 0) 
+                        throw new TokenExpiredException();
+
+
+                userAccount.setPassword(inputUserDto.getPassword());
+                // userRepository.save(userAccount);
+                Employee employee = employeeRepository.findByUserAccount(userAccount)
+                                .orElseThrow(() -> new EmployeeNotFoundException());
+
+                EntityModel<Employee> employeeEntityModel = employeeAssembler.toModel(employee);
+
+                 return ResponseEntity
                                 .created(employeeEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                                 .body(employeeEntityModel);
         }
