@@ -3,7 +3,7 @@ package ma.emsi.leavemanagement.utils;
 import java.math.BigDecimal;
 
 import ma.emsi.leavemanagement.entities.auth.Role;
-import ma.emsi.leavemanagement.entities.auth.Userr;
+import ma.emsi.leavemanagement.entities.auth.User;
 import ma.emsi.leavemanagement.repositories.auth.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -57,9 +57,9 @@ public class LoadDataBase {
     @Bean
     CommandLineRunner run(UserRepository repository, PasswordEncoder passwordEncoder){
         return args -> {
-            repository.save(new Userr(1L, "user@gmail.com", passwordEncoder.encode("user"), Role.USER));
-            repository.save(new Userr(2L, "wafa@gmail.com", passwordEncoder.encode("123"), Role.USER));
-            repository.save(new Userr(2L, "ad@gmail.com", passwordEncoder.encode("admin"), Role.ADMIN));
+            repository.save(new User(1L, "user@gmail.com", passwordEncoder.encode("user"), Role.USER));
+            repository.save(new User(2L, "wafa@gmail.com", passwordEncoder.encode("123"), Role.USER));
+            repository.save(new User(2L, "ad@gmail.com", passwordEncoder.encode("admin"), Role.ADMIN));
 
         };
     }

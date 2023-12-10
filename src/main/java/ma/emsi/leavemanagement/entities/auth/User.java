@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "user_table")
-public class Userr implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue
