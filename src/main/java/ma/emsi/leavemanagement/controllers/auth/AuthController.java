@@ -37,30 +37,4 @@ public class AuthController {
 
 
 
-//    @PostMapping("/login")
-//    public Map<String,String>login( @RequestParam String username,@RequestParam String password){
-//
-//
-//        log.info(username +password);
-//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
-//        Instant instant = Instant.now();
-//        String scope=authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
-//        JwtClaimsSet jwtClaimsSet= JwtClaimsSet.builder()
-//                .issuedAt(instant)
-//                .expiresAt(instant.plus(10, ChronoUnit.MINUTES))
-//                .subject(username)
-//                .claim("scope",scope)
-//                .build();
-//
-//        JwtEncoderParameters jwtEncoderParameters=
-//                JwtEncoderParameters.from(
-//                        JwsHeader.with(MacAlgorithm.HS512).build(),
-//                        jwtClaimsSet
-//                );
-//        String jwt = jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
-//
-//        return Map.of("access-token",jwt);
-//    }
-
-
 }

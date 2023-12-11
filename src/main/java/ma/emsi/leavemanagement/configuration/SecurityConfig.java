@@ -1,8 +1,9 @@
-package ma.emsi.leavemanagement.security;
+package ma.emsi.leavemanagement.configuration;
 
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ma.emsi.leavemanagement.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,8 +26,17 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {"/api/v1/auth/authenticate",
                                                     "/h2-console/**",
+                                                     "/v3/api-docs",
+                                                    "/v3/api-docs/**","/swagger-ui.html",
+                                                    "/swagger-ui/**",
+                                                    "/configuration/ui",
+                                                    "/swagger-resources/**",
+
+                                                     "/swagger-resources",
+                                                    "/configuration/security",
+                                                    "/webjars/**",
                                                     ".../",
-                                                    "ADD ENDPOINTS HERE, WHERE AUTH NOT NEEDED"
+                                                    "ADD ENDPOINTS WHERE AUTH IS NOT NEEDED"
     };
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
