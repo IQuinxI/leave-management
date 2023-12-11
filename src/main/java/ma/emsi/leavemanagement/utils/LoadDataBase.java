@@ -57,9 +57,9 @@ public class LoadDataBase {
     @Bean
     CommandLineRunner run(UserRepository repository, PasswordEncoder passwordEncoder){
         return args -> {
-            repository.save(new User(1L, "user@gmail.com", passwordEncoder.encode("user"), Role.USER));
-            repository.save(new User(2L, "wafa@gmail.com", passwordEncoder.encode("123"), Role.USER));
-            repository.save(new User(2L, "ad@gmail.com", passwordEncoder.encode("admin"), Role.ADMIN));
+            repository.save(new User(1L, "user1", passwordEncoder.encode("test1"), Role.USER));
+            repository.save(new User(2L, "user2", passwordEncoder.encode("test2"), Role.USER));
+            repository.save(new User(2L, "admin", passwordEncoder.encode("test3"), Role.ADMIN));
 
         };
     }
