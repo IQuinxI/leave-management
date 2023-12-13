@@ -1,4 +1,4 @@
-package ma.emsi.leavemanagement.dto.auth;
+package ma.emsi.leavemanagement.dtos.auth;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

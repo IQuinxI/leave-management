@@ -21,9 +21,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class LoadDataBase {
     @Transactional
     @Bean
-    CommandLineRunner loadData(EmployeeRepository employeeRepository) {
+    CommandLineRunner loadData(EmployeeRepository employeeRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
 
+            // initializes the user accounts
+            userRepository.save(User.builder()
+            .email("user@gmail.com")
+            .password(passwordEncoder.encode("user"))
+            .role(Role.USER)
+            .build());
+
+            userRepository.save(User.builder()
+            .email("wafa@gmail.com")
+            .password(passwordEncoder.encode("123"))
+            .role(Role.USER)
+            .build());
+
+            userRepository.save(User.builder()
+            .email("ad@gmail.com")
+            .password(passwordEncoder.encode("admin"))
+            .role(Role.ADMIN)
+            .build());
+            
+            // initializes the employees accounts
             employeeRepository.save(Employee.builder()
                     .firstName("firstname1")
                     .lastName("lastname1")
@@ -32,10 +52,9 @@ public class LoadDataBase {
                     .soldeNonPaye(100)
                     .soldeMaternité(100)
                     .soldeMaladie(10)
-                    .salire(BigDecimal.valueOf(10000))
+                    .salary(BigDecimal.valueOf(10000))
                     .poste("poste1")
-                    .email("email1@gmail.com")
-                    .password("password1")
+                    .userAccount(userRepository.findById(1l).get())
                     .build());
 
             employeeRepository.save(Employee.builder()
@@ -46,20 +65,10 @@ public class LoadDataBase {
                     .soldeNonPaye(10)
                     .soldeMaternité(75)
                     .soldeMaladie(5)
-                    .salire(BigDecimal.valueOf(5000))
+                    .salary(BigDecimal.valueOf(5000))
                     .poste("poste2")
-                    .email("email2@gmail.com")
-                    .password("password2")
+                    .userAccount(userRepository.findById(2l).get())
                     .build());
-        };
-    }
-
-    @Bean
-    CommandLineRunner run(UserRepository repository, PasswordEncoder passwordEncoder){
-        return args -> {
-            repository.save(new User(1L, "user1", passwordEncoder.encode("test1"), Role.USER));
-            repository.save(new User(2L, "user2", passwordEncoder.encode("test2"), Role.USER));
-            repository.save(new User(2L, "admin", passwordEncoder.encode("test3"), Role.ADMIN));
 
         };
     }

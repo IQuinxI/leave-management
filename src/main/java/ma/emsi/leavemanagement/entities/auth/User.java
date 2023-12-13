@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,10 +24,10 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Long Id;
-//    private String firstName;
-//    private String lastName;
     private String email;
     private String password;
+    private String resetToken;
+    private Instant resetTokenExpiryDate;
 
     @Enumerated(EnumType.STRING)
     private Role role;

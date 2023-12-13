@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * EmployeePasswordNotFoundAdvice
+ * TokenExpiredAdvice
  */
 @ControllerAdvice
-public class EmployeePasswordEmptyAdvice {
+public class TokenExpiredAdvice {
     @ResponseBody
-    @ExceptionHandler(EmployeePasswordIsEmptyException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String EmployeePasswordEmptyHandler(EmployeePasswordIsEmptyException ex) {
+    @ExceptionHandler(TokenExpiredException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    String TokenExpiredHandker(TokenExpiredException ex) {
         return ex.getMessage();
     }
     

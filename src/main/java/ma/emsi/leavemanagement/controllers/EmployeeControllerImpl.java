@@ -1,5 +1,6 @@
 package ma.emsi.leavemanagement.controllers;
 
+
 import java.util.Map;
 
 import org.springframework.hateoas.CollectionModel;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import ma.emsi.leavemanagement.dtos.InputUserDto;
 import ma.emsi.leavemanagement.entities.Employee;
 import ma.emsi.leavemanagement.services.EmployeeService;
 
@@ -21,7 +24,7 @@ import ma.emsi.leavemanagement.services.EmployeeService;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/employee")
+@RequestMapping("/api/v1/employees")
 public class EmployeeControllerImpl implements EmployeeController {
     private final EmployeeService employeeService;
 
@@ -43,9 +46,21 @@ public class EmployeeControllerImpl implements EmployeeController {
         return employeeService.replaceEmployee(employee);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/password")
     @Override
-    public ResponseEntity<?> resetPassword(@PathVariable("id") Long id, @RequestBody Map<String, String> password) {
-        return employeeService.resetPassword(id, password);
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> email) {
+        return employeeService.resetPassword(email);
+    }
+
+    @GetMapping("/reset-password")
+    @Override
+    public ResponseEntity<?> verifyToken(@RequestParam("token") String token) {
+        return employeeService.verifyToken(token);
+    }
+
+    @PostMapping("/reset-password")
+    @Override
+    public ResponseEntity<?> changePassword(@RequestBody InputUserDto inputUserDto,@RequestParam("token") String token) {
+        return employeeService.changePassword(inputUserDto, token);        
     }
 }

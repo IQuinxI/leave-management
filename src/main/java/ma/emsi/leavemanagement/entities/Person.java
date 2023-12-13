@@ -2,14 +2,18 @@ package ma.emsi.leavemanagement.entities;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import ma.emsi.leavemanagement.entities.auth.User;
 
 /**
  * Person
@@ -29,12 +33,13 @@ public abstract class Person {
     private String firstName;
     private String lastName;
     private String phone;
-    private String email;
-    private String password;
     private int soldePaye;
     private int soldeNonPaye;
     private int soldeMaternité;
     private int soldeMaladie;
-    private BigDecimal salire;
-
+    private BigDecimal salary;
+    // TODO: uncomment JsonIgnore
+    // @JsonIgnore
+    @OneToOne
+    private User userAccount;
 }
