@@ -21,7 +21,7 @@ import ma.emsi.leavemanagement.assemblers.EmployeeAssembler;
 import ma.emsi.leavemanagement.controllers.EmployeeControllerImpl;
 import ma.emsi.leavemanagement.dtos.InputUserDto;
 import ma.emsi.leavemanagement.entities.Employee;
-import ma.emsi.leavemanagement.entities.auth.Userr;
+import ma.emsi.leavemanagement.entities.auth.User;
 import ma.emsi.leavemanagement.exceptions.EmployeeNotFoundException;
 import ma.emsi.leavemanagement.exceptions.FieldIsEmptyOrNullException;
 import ma.emsi.leavemanagement.exceptions.TokenExpiredException;
@@ -108,7 +108,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
                 // find the user account by email, if it doesn't exist return a
                 // "EmployeeNotFoundException"
-                Userr userAccount = userRepository.findByEmail(emailValue)
+                User userAccount = userRepository.findByEmail(emailValue)
                                 .orElseThrow(() -> new EmployeeNotFoundException());
 
 
@@ -151,7 +151,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         @Override
         public ResponseEntity<?> verifyToken(String token) {
                 //TODO: retrieve the user account using the token
-                Userr userAccount = userRepository.findByResetToken(token)
+                User userAccount = userRepository.findByResetToken(token)
                         .orElseThrow(() -> new EmployeeNotFoundException());
 
                 //TODO: check if the token has expired 
@@ -174,7 +174,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // it reverifies the cridentials and changes the password
         @Override
         public ResponseEntity<?> changePassword(InputUserDto inputUserDto, String token) {
-                Userr userAccount = userRepository.findByResetToken(token)
+                User userAccount = userRepository.findByResetToken(token)
                         .orElseThrow(() -> new EmployeeNotFoundException());
 
                 if(userAccount.getResetTokenExpiryDate().compareTo(Instant.now()) < 0) 

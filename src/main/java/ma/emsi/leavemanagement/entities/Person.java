@@ -13,7 +13,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToOne;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import ma.emsi.leavemanagement.entities.auth.Userr;
+import ma.emsi.leavemanagement.entities.auth.User;
 
 /**
  * Person
@@ -41,5 +41,5 @@ public abstract class Person {
     // TODO: uncomment JsonIgnore
     // @JsonIgnore
     @OneToOne
-    private Userr userAccount;
+    private User userAccount;
 }
