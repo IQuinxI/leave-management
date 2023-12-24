@@ -1,4 +1,4 @@
-package ma.emsi.leavemanagement.services;
+package ma.emsi.leavemanagement.services.Impl;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import ma.emsi.leavemanagement.services.EmployeeService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -55,10 +56,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                                         employee.setFirstName(newEmployee.getFirstName());
                                         employee.setLastName(newEmployee.getLastName());
                                         employee.setPhone(newEmployee.getPhone());
-                                        employee.setSoldePaye(newEmployee.getSoldePaye());
-                                        employee.setSoldeNonPaye(newEmployee.getSoldeNonPaye());
-                                        employee.setSoldeMaternité(newEmployee.getSoldeMaternité());
-                                        employee.setSoldeMaladie(newEmployee.getSoldeMaladie());
+                                        employee.setAnnualBalance(newEmployee.getAnnualBalance());
+                                        employee.setUnpaidBalance(newEmployee.getUnpaidBalance());
+                                        employee.setMaternityBalance(newEmployee.getMaternityBalance());
+                                        employee.setSickBalance(newEmployee.getSickBalance());
                                         employee.setSalary(newEmployee.getSalary());
                                         employee.setPoste(newEmployee.getPoste());
 
