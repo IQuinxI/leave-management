@@ -1,16 +1,11 @@
 package ma.emsi.leavemanagement.entities;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ma.emsi.leavemanagement.entities.auth.User;
@@ -25,19 +20,25 @@ import ma.emsi.leavemanagement.entities.auth.User;
 @SuperBuilder
 @ToString
 @Entity
+@Builder
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Person {
+public  class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
     private String firstName;
     private String lastName;
     private String phone;
-    private int soldePaye;
-    private int soldeNonPaye;
-    private int soldeMaternité;
-    private int soldeMaladie;
+    private int annualBalance;
+    private int unpaidBalance;
+    private int maternityBalance;
+    private int sickBalance;
     private BigDecimal salary;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "person")
+    private List<Leave>leaves;
+
     // TODO: uncomment JsonIgnore
     // @JsonIgnore
     @OneToOne

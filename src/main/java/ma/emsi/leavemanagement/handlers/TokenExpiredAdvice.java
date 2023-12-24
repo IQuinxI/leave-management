@@ -1,5 +1,6 @@
-package ma.emsi.leavemanagement.exceptions;
+package ma.emsi.leavemanagement.handlers;
 
+import ma.emsi.leavemanagement.exceptions.TokenExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

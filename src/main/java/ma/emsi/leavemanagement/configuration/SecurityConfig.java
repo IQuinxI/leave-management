@@ -31,12 +31,13 @@ public class SecurityConfig {
                                                      "/v3/api-docs",
                                                     "/v3/api-docs/**","/swagger-ui.html",
                                                     "/swagger-ui/**",
-                                                    "/configuration/ui",
+"http://localhost:8080/v3/api-doc"    ,                                                "/configuration/ui",
                                                     "/swagger-resources/**",
                                                     "/api/v1/employees/**",
                                                      "/swagger-resources",
                                                     "/configuration/security",
                                                     "/webjars/**",
+                                                    "/api/v1/leaves/**",
                                                     ".../",
                                                     "ADD ENDPOINTS WHERE AUTH IS NOT NEEDED"
     };

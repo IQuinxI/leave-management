@@ -26,8 +26,8 @@ public class LoadDataBase {
 
             // initializes the user accounts
             userRepository.save(User.builder()
-            .email("user@gmail.com")
-            .password(passwordEncoder.encode("user"))
+            .email("user3")
+            .password(passwordEncoder.encode("user3"))
             .role(Role.USER)
             .build());
 
@@ -42,35 +42,40 @@ public class LoadDataBase {
             .password(passwordEncoder.encode("admin"))
             .role(Role.ADMIN)
             .build());
-            
-            // initializes the employees accounts
-            employeeRepository.save(Employee.builder()
-                    .firstName("firstname1")
-                    .lastName("lastname1")
-                    .phone("069729387")
-                    .soldePaye(20)
-                    .soldeNonPaye(100)
-                    .soldeMaternité(100)
-                    .soldeMaladie(10)
-                    .salary(BigDecimal.valueOf(10000))
-                    .poste("poste1")
-                    .userAccount(userRepository.findById(1l).get())
+
+            userRepository.save(User.builder()
+                    .email("joey@gmail.com")
+                    .password(passwordEncoder.encode("joey"))
+                    .role(Role.ADMIN)
                     .build());
 
-            employeeRepository.save(Employee.builder()
-                    .firstName("firstname2")
-                    .lastName("lastname2")
-                    .phone("069872312")
-                    .soldePaye(15)
-                    .soldeNonPaye(10)
-                    .soldeMaternité(75)
-                    .soldeMaladie(5)
-                    .salary(BigDecimal.valueOf(5000))
-                    .poste("poste2")
-                    .userAccount(userRepository.findById(2l).get())
-                    .build());
-
+//            // initializes the employees accounts
+//            employeeRepository.save(Employee.builder()
+//                    .firstName("firstname1")
+//                    .lastName("lastname1")
+//                    .phone("069729387")
+//                    .soldePaye(20)
+//                    .soldeNonPaye(100)
+//                    .soldeMaternité(100)
+//                    .soldeMaladie(10)
+//                    .salary(BigDecimal.valueOf(10000))
+//                    .poste("poste1")
+//                    .userAccount(userRepository.findById(1l).get())
+//                    .build());
+//
+//            employeeRepository.save(Employee.builder()
+//                    .firstName("firstname2")
+//                    .lastName("lastname2")
+//                    .phone("069872312")
+//                    .soldePaye(15)
+//                    .soldeNonPaye(10)
+//                    .soldeMaternité(75)
+//                    .soldeMaladie(5)
+//                    .salary(BigDecimal.valueOf(5000))
+//                    .poste("poste2")
+//                    .userAccount(userRepository.findById(2l).get())
+//                    .build());
+//
         };
     }
-
 }

@@ -59,16 +59,28 @@ public class JwtService {
             long expiration
 
     ){
+//        Instant now = Instant.now();
+//        Instant expirationTime = now.plus(10, ChronoUnit.MINUTES);
+//        return Jwts
+//                .builder()
+//                .setClaims(extractClaims)
+//                .setSubject(userDetails.getUsername())
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis()+20))
+//                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+//                .compact();
+
         Instant now = Instant.now();
-        Instant expirationTime = now.plus(10, ChronoUnit.MINUTES);
-        return Jwts
-                .builder()
+        Instant expirationTime = now.plus(expiration, ChronoUnit.MINUTES);
+
+        return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+20))
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(expirationTime))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+
     }
 
 //    public String extractUsername(String jwt) {
