@@ -1,24 +1,17 @@
 package ma.emsi.leavemanagement.controllers;
 
-
-import lombok.AllArgsConstructor;
-import ma.emsi.leavemanagement.entities.Leave;
-import ma.emsi.leavemanagement.services.LeaveService;
-import org.springframework.http.HttpStatus;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-@RestController
-@AllArgsConstructor
-@RequestMapping("api/v1/leaves")
-@CrossOrigin("*")
-public class LeaveController {
+import ma.emsi.leavemanagement.entities.Leave;
 
-    private final LeaveService leaveService;
+/**
+ * LeaveController
+ */
+public interface LeaveController {
 
-    @PostMapping("/{idPerson}")
-    public ResponseEntity<Leave> submitLeaveRequest(@RequestBody Leave leave,@PathVariable Long idPerson){
-        Leave savedLeave=leaveService.saveLeave(leave,idPerson);
-        return new ResponseEntity<>(savedLeave, HttpStatus.OK);
-    }
+    public ResponseEntity<Leave> submitLeaveRequest(Leave leave, Long idPerson);
+    public CollectionModel<EntityModel<Leave>> getAllLeaves(Long idPerson);
+
 }
