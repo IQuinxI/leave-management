@@ -1,10 +1,12 @@
 package ma.emsi.leavemanagement.services;
 
-import lombok.AllArgsConstructor;
 import ma.emsi.leavemanagement.entities.Leave;
-import org.springframework.stereotype.Service;
+
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 
 
 public interface LeaveService {
     public Leave saveLeave(Leave leave,Long idPerson);
+    public CollectionModel<EntityModel<Leave>> getAllLeaves(Long idPerson);
 }

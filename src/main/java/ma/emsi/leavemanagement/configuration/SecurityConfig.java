@@ -26,20 +26,22 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/authenticate",
-                                                    "/h2-console/**",
-                                                     "/v3/api-docs",
-                                                    "/v3/api-docs/**","/swagger-ui.html",
-                                                    "/swagger-ui/**",
-"http://localhost:8080/v3/api-doc"    ,                                                "/configuration/ui",
-                                                    "/swagger-resources/**",
-                                                    "/api/v1/employees/**",
-                                                     "/swagger-resources",
-                                                    "/configuration/security",
-                                                    "/webjars/**",
-                                                    "/api/v1/leaves/**",
-                                                    ".../",
-                                                    "ADD ENDPOINTS WHERE AUTH IS NOT NEEDED"
+    private static final String[] WHITE_LIST_URL = { "/api/v1/auth/authenticate",
+            "/h2-console/**",
+            "/v3/api-docs",
+            "/v3/api-docs/**", 
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "http://localhost:8080/v3/api-doc", 
+            "/configuration/ui",
+            "/swagger-resources/**",
+            "/api/v1/employees/**",
+            "/swagger-resources",
+            "/configuration/security",
+            "/webjars/**",
+            "/api/v1/leaves/**",
+            ".../",
+            "ADD ENDPOINTS WHERE AUTH IS NOT NEEDED"
     };
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -50,11 +52,10 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers(WHITE_LIST_URL)
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated())
+                .authorizeHttpRequests(req -> req.requestMatchers(WHITE_LIST_URL)
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .authenticationProvider(authenticationProvider)
