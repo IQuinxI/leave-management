@@ -32,5 +32,11 @@ public class LeaveControllerImpl implements LeaveController {
     public CollectionModel<EntityModel<Leave>> getAllLeaves(@PathVariable("idPerson") Long idPerson) {
         return leaveService.getAllLeaves(idPerson);
     }
+
+    @PutMapping("cancel/{idLeave}")
+    public ResponseEntity<Leave> cancelLeaveRequest(@PathVariable Long idLeave){
+        Leave canceledLeave=leaveService.cancelLeave(idLeave);
+        return new ResponseEntity<>(canceledLeave, HttpStatus.OK);
+    }
     
 }

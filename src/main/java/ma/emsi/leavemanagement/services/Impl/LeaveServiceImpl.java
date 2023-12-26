@@ -6,10 +6,8 @@ import ma.emsi.leavemanagement.assemblers.LeaveAssembler;
 import ma.emsi.leavemanagement.entities.Leave;
 import ma.emsi.leavemanagement.entities.Person;
 import ma.emsi.leavemanagement.enums.Approbation;
-import ma.emsi.leavemanagement.exceptions.EmployeeNotFoundException;
-import ma.emsi.leavemanagement.exceptions.InsufficientBalanceException;
-import ma.emsi.leavemanagement.exceptions.InvalidLeaveDateException;
-import ma.emsi.leavemanagement.exceptions.InvalidLeaveTypeException;
+import ma.emsi.leavemanagement.enums.LeaveStatus;
+import ma.emsi.leavemanagement.exceptions.*;
 import ma.emsi.leavemanagement.repositories.LeaveRepository;
 import ma.emsi.leavemanagement.repositories.PersonRepository;
 import ma.emsi.leavemanagement.services.LeaveService;
@@ -58,6 +56,7 @@ public class LeaveServiceImpl implements LeaveService {
 				.startDate(leave.getStartDate())
 				.endDate(leave.getEndDate())
 				.approbation(Approbation.APPRO_MANAGER)
+				.status(LeaveStatus.PENDING)
 				.createdAt(new Date())
 				.build();
 
@@ -81,5 +80,15 @@ public class LeaveServiceImpl implements LeaveService {
 		// convert the list into CollectionModel
 		// and return it
 		return CollectionModel.of(leavesList);
+	}
+
+	@Override
+	public Leave cancelLeave(Long idLeave) {
+		Leave canceledLeave = leaveRepository.findById(idLeave)
+				.orElseThrow(()->new LeaveNotFoundException("Leave not found with id : "+idLeave));
+
+		canceledLeave.setApprobation(Approbation.NONE);
+		canceledLeave.setStatus(LeaveStatus.CANCELLED);
+		return canceledLeave;
 	}
 }
