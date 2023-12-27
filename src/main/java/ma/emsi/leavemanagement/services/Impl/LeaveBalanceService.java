@@ -3,7 +3,6 @@ package ma.emsi.leavemanagement.services.Impl;
 import lombok.AllArgsConstructor;
 import ma.emsi.leavemanagement.entities.Person;
 import ma.emsi.leavemanagement.repositories.PersonRepository;
-import ma.emsi.leavemanagement.services.PersonService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 

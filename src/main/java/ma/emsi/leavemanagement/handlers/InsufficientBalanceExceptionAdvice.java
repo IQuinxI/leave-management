@@ -1,7 +1,6 @@
 package ma.emsi.leavemanagement.handlers;
 
 
-import ma.emsi.leavemanagement.exceptions.FieldIsEmptyOrNullException;
 import ma.emsi.leavemanagement.exceptions.InsufficientBalanceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
