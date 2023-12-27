@@ -87,11 +87,10 @@ public class LeaveServiceImpl implements LeaveService {
 		return CollectionModel.of(leavesList);
 	}
 
-	// private boolean managerHasEmployee(Manager manager, Long )
 	@Override
 	public ResponseEntity<EntityModel<Leave>> approveLeaveRequest(Long idLeave, Long idManager) {
 		// checks if the manager exists
-		Manager manager = managerRepository.findById(idManager)
+		managerRepository.findById(idManager)
 				.orElseThrow(() -> new EmployeeNotFoundException());
 
 
@@ -106,7 +105,6 @@ public class LeaveServiceImpl implements LeaveService {
 		if(emp.size() == 0) 
 			throw  new ManagerDoesNotOverseeEmployeeException();
 
-		System.out.println(emp.get(0).getFirstName());
 		// checks if the Leave request is pending
 		leaveValidators.leaveRequestIsPending(leave);
 
