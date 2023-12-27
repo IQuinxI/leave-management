@@ -9,6 +9,8 @@ import ma.emsi.leavemanagement.repositories.PersonRepository;
 import ma.emsi.leavemanagement.services.PersonService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class PersonServiceImpl implements PersonService {
@@ -29,4 +31,9 @@ public class PersonServiceImpl implements PersonService {
             default:throw new InvalidLeaveTypeException("Unsupported leave type : "+leaveType);
         }
     }
+
+    public List<Person> getPersonsList(){
+        return personRepository.findAll();
+    }
+
 }
