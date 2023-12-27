@@ -3,14 +3,20 @@ package ma.emsi.leavemanagement.services.Impl;
 import lombok.AllArgsConstructor;
 import ma.emsi.leavemanagement.assemblers.EmployeeAssembler;
 import ma.emsi.leavemanagement.assemblers.LeaveAssembler;
+import ma.emsi.leavemanagement.entities.Employee;
 import ma.emsi.leavemanagement.entities.Leave;
+import ma.emsi.leavemanagement.entities.Manager;
 import ma.emsi.leavemanagement.entities.Person;
 import ma.emsi.leavemanagement.enums.Approbation;
+import ma.emsi.leavemanagement.enums.LeaveStatus;
 import ma.emsi.leavemanagement.exceptions.EmployeeNotFoundException;
 import ma.emsi.leavemanagement.exceptions.InsufficientBalanceException;
 import ma.emsi.leavemanagement.exceptions.InvalidLeaveDateException;
 import ma.emsi.leavemanagement.exceptions.InvalidLeaveTypeException;
+import ma.emsi.leavemanagement.exceptions.LeaveNotFoundException;
+import ma.emsi.leavemanagement.exceptions.ManagerDoesNotOverseeEmployeeException;
 import ma.emsi.leavemanagement.repositories.LeaveRepository;
+import ma.emsi.leavemanagement.repositories.ManagerRepository;
 import ma.emsi.leavemanagement.repositories.PersonRepository;
 import ma.emsi.leavemanagement.services.LeaveService;
 import ma.emsi.leavemanagement.validators.EmployeeValidator;
@@ -18,13 +24,18 @@ import ma.emsi.leavemanagement.validators.LeaveValidators;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
+@Transactional
 @Service
 public class LeaveServiceImpl implements LeaveService {
 
@@ -33,18 +44,11 @@ public class LeaveServiceImpl implements LeaveService {
 	private final PersonRepository personRepository;
 	private final EmployeeValidator employeeValidator;
 	private final LeaveAssembler leaveAssembler;
+	private final ManagerRepository managerRepository;
 
 	@Override
 	public Leave saveLeave(Leave leave, Long idPerson)
 			throws InsufficientBalanceException, InvalidLeaveDateException, InvalidLeaveTypeException {
-		personRepository.save(
-				Person.builder()
-						.Id(idPerson)
-						.sickBalance(100)
-						.annualBalance(100)
-						.unpaidBalance(100)
-						.maternityBalance(100)
-						.build());
 
 		Person person = personRepository.findById(idPerson)
 				.orElseThrow(() -> new EmployeeNotFoundException(idPerson));
@@ -77,9 +81,44 @@ public class LeaveServiceImpl implements LeaveService {
 				.stream()
 				.map(leaveAssembler::toModel)
 				.collect(Collectors.toList());
-		
+
 		// convert the list into CollectionModel
 		// and return it
 		return CollectionModel.of(leavesList);
+	}
+
+	// private boolean managerHasEmployee(Manager manager, Long )
+	@Override
+	public ResponseEntity<EntityModel<Leave>> approveLeaveRequest(Long idLeave, Long idManager) {
+		// checks if the manager exists
+		Manager manager = managerRepository.findById(idManager)
+				.orElseThrow(() -> new EmployeeNotFoundException());
+
+
+		// checks if the Leave request already exists
+		Leave leave = leaveRepository.findById(idLeave)
+				.orElseThrow(() -> new LeaveNotFoundException(idLeave));
+
+		// checks if the manager oversees the employee
+		// uses JPA to find the employee id inside the list of employees
+		Long idEmployee = leave.getPerson().getId();
+		List<Manager> emp = managerRepository.findByIdAndEmployees_Id(idManager, idEmployee);
+		if(emp.size() == 0) 
+			throw  new ManagerDoesNotOverseeEmployeeException();
+
+		System.out.println(emp.get(0).getFirstName());
+		// checks if the Leave request is pending
+		leaveValidators.leaveRequestIsPending(leave);
+
+		// change the status
+		leave.setStatus(LeaveStatus.ACCEPTED);
+
+		// assemble the entity
+		EntityModel<Leave> leaveEntityModel = leaveAssembler.toModel(leave);
+
+		// return a response entity
+		return ResponseEntity
+				.created(leaveEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+				.body(leaveEntityModel);
 	}
 }

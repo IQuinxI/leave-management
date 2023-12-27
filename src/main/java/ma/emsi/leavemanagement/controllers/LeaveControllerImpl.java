@@ -32,5 +32,11 @@ public class LeaveControllerImpl implements LeaveController {
     public CollectionModel<EntityModel<Leave>> getAllLeaves(@PathVariable("idPerson") Long idPerson) {
         return leaveService.getAllLeaves(idPerson);
     }
+
+    @PutMapping("/approve")
+    @Override
+    public ResponseEntity<EntityModel<Leave>> approveLeaveRequest(@RequestParam ("idLeave") Long idLeave, @RequestParam("idManager") Long idManager) {
+        return leaveService.approveLeaveRequest(idLeave, idManager);
+    }
     
 }

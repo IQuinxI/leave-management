@@ -40,6 +40,7 @@ public class SecurityConfig {
             "/configuration/security",
             "/webjars/**",
             "/api/v1/leaves/**",
+        //     "/api/v1/leaves/approve?**",
             ".../",
             "ADD ENDPOINTS WHERE AUTH IS NOT NEEDED"
     };

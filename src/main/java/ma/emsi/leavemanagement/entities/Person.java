@@ -20,9 +20,8 @@ import ma.emsi.leavemanagement.entities.auth.User;
 @SuperBuilder
 @ToString
 @Entity
-@Builder
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public  class Person {
+public abstract class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
@@ -40,7 +39,7 @@ public  class Person {
     private List<Leave>leaves;
 
     // TODO: uncomment JsonIgnore
-    // @JsonIgnore
+    @JsonIgnore
     @OneToOne
     private User userAccount;
 }

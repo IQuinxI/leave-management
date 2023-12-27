@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 //        }
 //    }
     @ResponseBody
-    @ExceptionHandler
+    @ExceptionHandler(InvalidLeaveDateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleInvalidLeaveDateException(InvalidLeaveDateException ex) {
         return ex.getMessage();
