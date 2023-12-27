@@ -94,10 +94,18 @@ public class LeaveServiceImpl implements LeaveService {
 		canceledLeave.setStatus(LeaveStatus.CANCELLED);
 		return canceledLeave;
 	}
-
+	
 	@Override
 	public ResponseEntity<EntityModel<Leave>> approveLeaveRequest(Long idLeave, Long idManager) {
-		// checks if the manager exists
+		return approbation(idLeave, idManager, LeaveStatus.ACCEPTED);
+	}
+
+	@Override
+	public ResponseEntity<EntityModel<Leave>> declineLeaveRequest(Long idLeave, Long idManager) {
+		return approbation(idLeave, idManager, LeaveStatus.REJECTED);
+	}
+
+	private ResponseEntity<EntityModel<Leave>> approbation(Long idLeave, Long idManager, LeaveStatus leaveStatus) {
 		managerRepository.findById(idManager)
 				.orElseThrow(() -> new EmployeeNotFoundException());
 
@@ -117,8 +125,8 @@ public class LeaveServiceImpl implements LeaveService {
 		leaveValidators.leaveRequestIsPending(leave);
 
 		// change the status
-		leave.setStatus(LeaveStatus.ACCEPTED);
-
+		leave.setStatus(leaveStatus);
+		leave.setApprobation(Approbation.NONE);
 		// assemble the entity
 		EntityModel<Leave> leaveEntityModel = leaveAssembler.toModel(leave);
 
@@ -127,4 +135,5 @@ public class LeaveServiceImpl implements LeaveService {
 				.created(leaveEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(leaveEntityModel);
 	}
+	
 }

@@ -54,4 +54,10 @@ public class LeaveControllerImpl implements LeaveController {
         leaveBalanceService.updateLeaveBalanceEachNewYear();
         return ResponseEntity.ok("Leave balances reset successfully");
     }
+
+    @PutMapping("/decline")
+    @Override
+    public ResponseEntity<EntityModel<Leave>> declineLeaveRequest(@RequestParam ("idLeave") Long idLeave, @RequestParam("idManager") Long idManager) {
+        return leaveService.declineLeaveRequest(idLeave, idManager);
+    }
 }

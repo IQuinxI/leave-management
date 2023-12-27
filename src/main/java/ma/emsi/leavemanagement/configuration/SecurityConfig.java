@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 // import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 // import org.springframework.web.cors.reactive.CorsConfigurationSource;
 
-import java.util.List;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -40,7 +39,6 @@ public class SecurityConfig {
             "/configuration/security",
             "/webjars/**",
             "/api/v1/leaves/**",
-        //     "/api/v1/leaves/approve?**",
             ".../",
             "ADD ENDPOINTS WHERE AUTH IS NOT NEEDED"
     };

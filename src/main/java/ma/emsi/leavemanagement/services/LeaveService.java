@@ -11,5 +11,6 @@ public interface LeaveService {
     public Leave saveLeave(Leave leave,Long idPerson);
     public CollectionModel<EntityModel<Leave>> getAllLeaves(Long idPerson);
     public ResponseEntity<EntityModel<Leave>> approveLeaveRequest(Long idLeave, Long idManager);
+    public ResponseEntity<EntityModel<Leave>> declineLeaveRequest(Long idLeave, Long idManager);
     public Leave cancelLeave(Long idLeave);
 }

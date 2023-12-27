@@ -15,6 +15,6 @@ public interface LeaveController {
     public CollectionModel<EntityModel<Leave>> getAllLeaves(Long idPerson);
     public ResponseEntity<EntityModel<Leave>> approveLeaveRequest(Long idLeave, Long idManager);
     public ResponseEntity<Leave> cancelLeaveRequest(Long idLeave);
-
+	public ResponseEntity<EntityModel<Leave>> declineLeaveRequest(Long idLeave, Long idManager);
 
 }
