@@ -88,7 +88,7 @@ public class LeaveServiceImpl implements LeaveService {
 	@Override
 	public Leave cancelLeave(Long idLeave) {
 		Leave canceledLeave = leaveRepository.findById(idLeave)
-				.orElseThrow(()->new LeaveNotFoundException("Leave not found with id : "+idLeave));
+				.orElseThrow(()->new LeaveNotFoundException(idLeave));
 
 		canceledLeave.setApprobation(Approbation.NONE);
 		canceledLeave.setStatus(LeaveStatus.CANCELLED);
