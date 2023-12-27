@@ -1,12 +1,11 @@
 package ma.emsi.leavemanagement.exceptions;
 
-/**
- * LeaveNotFoundException
- */
 public class LeaveNotFoundException extends RuntimeException{
-
-    public LeaveNotFoundException(Long idLeave) {
-        super("Leave with the id "+ idLeave + " not found");
+    public LeaveNotFoundException(String message) {
+        super(message);
     }
-    
+
+    public LeaveNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
