@@ -13,7 +13,7 @@ import ma.emsi.leavemanagement.exceptions.*;
 import ma.emsi.leavemanagement.repositories.LeaveRepository;
 import ma.emsi.leavemanagement.repositories.ManagerRepository;
 import ma.emsi.leavemanagement.repositories.PersonRepository;
-import ma.emsi.leavemanagement.repositories.SueprvisorRepository;
+import ma.emsi.leavemanagement.repositories.SupervisorRepository;
 import ma.emsi.leavemanagement.services.LeaveService;
 import ma.emsi.leavemanagement.validators.EmployeeValidator;
 import ma.emsi.leavemanagement.validators.LeaveValidators;
@@ -45,7 +45,7 @@ public class LeaveServiceImpl implements LeaveService {
 	private final EmployeeValidator employeeValidator;
 	private final LeaveAssembler leaveAssembler;
 	private final ManagerRepository managerRepository;
-	private final SueprvisorRepository sueprvisorRepository;
+	private final SupervisorRepository sueprvisorRepository;
 
 	@Override
 	public Leave saveLeave(Leave leave, Long idPerson)

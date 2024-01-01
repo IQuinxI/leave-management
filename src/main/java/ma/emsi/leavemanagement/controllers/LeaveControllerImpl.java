@@ -2,16 +2,11 @@ package ma.emsi.leavemanagement.controllers;
 
 
 import lombok.AllArgsConstructor;
-import ma.emsi.leavemanagement.entities.Employee;
 import ma.emsi.leavemanagement.entities.Leave;
-import ma.emsi.leavemanagement.repositories.ManagerRepository;
 import ma.emsi.leavemanagement.services.Impl.LeaveBalanceService;
 import ma.emsi.leavemanagement.services.LeaveService;
-import  ma.emsi.leavemanagement.entities.Manager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -29,7 +24,6 @@ public class LeaveControllerImpl implements LeaveController {
 
     private final LeaveService leaveService;
     private final LeaveBalanceService leaveBalanceService;
-    private final ManagerRepository managerRepository;
 
     @PostMapping("/{idPerson}")
     public ResponseEntity<Leave> submitLeaveRequest(@RequestBody Leave leave,@PathVariable Long idPerson){
@@ -67,21 +61,10 @@ public class LeaveControllerImpl implements LeaveController {
         return leaveService.declineLeaveRequest(idLeave, idManager);
     }
 
-    public List<Leave> getManagers(@PathVariable("idManager") Long idManager) {
-        List<Leave> leaves = new ArrayList<>();
-
-        managerRepository.findById(idManager).get().getEmployees()
-            .forEach(emp -> {
-                leaves.addAll(emp.getLeaves());
-            });
-        return leaves;
-    }
-
-    @GetMapping("/test/{idManager}")
+   
+    @GetMapping("/managers/{idManager}")
     @Override
     public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(@PathVariable("idManager") Long idManager) {
-        		System.out.println("Hello");
-
         return leaveService.getLeavesUnderSupervision(idManager);
     }
     

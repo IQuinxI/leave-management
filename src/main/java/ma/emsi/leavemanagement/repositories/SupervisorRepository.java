@@ -7,7 +7,7 @@ import ma.emsi.leavemanagement.entities.Supervisor;
 /**
  * SueprvisorRepository
  */
-public interface SueprvisorRepository extends JpaRepository<Supervisor, Long>{
+public interface SupervisorRepository extends JpaRepository<Supervisor, Long>{
 
     
 }

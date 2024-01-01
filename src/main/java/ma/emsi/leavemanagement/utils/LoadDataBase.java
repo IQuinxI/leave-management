@@ -37,8 +37,6 @@ public class LoadDataBase {
                         ManagerRepository managerRepository,
                         PasswordEncoder passwordEncoder) {
                 return args -> {
-		System.out.println("Hello");
-
 
                         // initializes the user accounts
                         userRepository.save(User.builder()
