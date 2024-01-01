@@ -19,8 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -69,7 +67,6 @@ public class LeaveControllerImpl implements LeaveController {
         return leaveService.declineLeaveRequest(idLeave, idManager);
     }
 
-    @GetMapping("/test/{idManager}")
     public List<Leave> getManagers(@PathVariable("idManager") Long idManager) {
         List<Leave> leaves = new ArrayList<>();
 
@@ -80,8 +77,11 @@ public class LeaveControllerImpl implements LeaveController {
         return leaves;
     }
 
+    @GetMapping("/test/{idManager}")
     @Override
-    public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(Long idManager) {
+    public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(@PathVariable("idManager") Long idManager) {
+        		System.out.println("Hello");
+
         return leaveService.getLeavesUnderSupervision(idManager);
     }
     

@@ -6,12 +6,14 @@ import ma.emsi.leavemanagement.controllers.LeaveControllerImpl;
 import ma.emsi.leavemanagement.entities.Leave;
 import ma.emsi.leavemanagement.entities.Manager;
 import ma.emsi.leavemanagement.entities.Person;
+import ma.emsi.leavemanagement.entities.Supervisor;
 import ma.emsi.leavemanagement.enums.Approbation;
 import ma.emsi.leavemanagement.enums.LeaveStatus;
 import ma.emsi.leavemanagement.exceptions.*;
 import ma.emsi.leavemanagement.repositories.LeaveRepository;
 import ma.emsi.leavemanagement.repositories.ManagerRepository;
 import ma.emsi.leavemanagement.repositories.PersonRepository;
+import ma.emsi.leavemanagement.repositories.SueprvisorRepository;
 import ma.emsi.leavemanagement.services.LeaveService;
 import ma.emsi.leavemanagement.validators.EmployeeValidator;
 import ma.emsi.leavemanagement.validators.LeaveValidators;
@@ -43,6 +45,7 @@ public class LeaveServiceImpl implements LeaveService {
 	private final EmployeeValidator employeeValidator;
 	private final LeaveAssembler leaveAssembler;
 	private final ManagerRepository managerRepository;
+	private final SueprvisorRepository sueprvisorRepository;
 
 	@Override
 	public Leave saveLeave(Leave leave, Long idPerson)
@@ -136,23 +139,30 @@ public class LeaveServiceImpl implements LeaveService {
 				.body(leaveEntityModel);
 	}
 
+	// this is a general purpose method
+	// it will be used for all supervisors (HR, manager)
+	// to get all the leaves of the employees
 	@Override
 	public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(Long idManager) {
 		List<Leave> leaves = new ArrayList<>();
 
-		managerRepository.findById(idManager).get().getEmployees()
+		// retrieve all employees under the manager
+		// and load the leaves in the leaves List
+		Supervisor supervisor = sueprvisorRepository.findById(idManager)
+				.orElseThrow(() -> new EmployeeNotFoundException("Manager not found"));
+
+		supervisor.getEmployees()
 				.forEach(emp -> {
 					leaves.addAll(emp.getLeaves());
 				});
 
-		CollectionModel<EntityModel<Leave>> collectionModel = CollectionModel.of(
-				leaves
-					.stream()
-					.map(leaveAssembler::toModel)
-					.collect(Collectors.toList()
-				),
+		// convert the list into a collectionModel
+		CollectionModel<EntityModel<Leave>> collectionModel = CollectionModel.of(leaves
+						.stream()
+						.map(leaveAssembler::toModel)
+						.collect(Collectors.toList()),
 				linkTo(methodOn(LeaveControllerImpl.class).getLeavesUnderSupervision(idManager)).withSelfRel());
-				
+
 		return collectionModel;
 	}
 

@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
-public class Manager extends Person{
+public class Manager extends Supervisor{
     @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
     private List<Employee> employees;
 }
