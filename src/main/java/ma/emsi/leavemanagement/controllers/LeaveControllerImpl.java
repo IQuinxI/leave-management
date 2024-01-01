@@ -2,13 +2,16 @@ package ma.emsi.leavemanagement.controllers;
 
 
 import lombok.AllArgsConstructor;
+import ma.emsi.leavemanagement.entities.Employee;
 import ma.emsi.leavemanagement.entities.Leave;
 import ma.emsi.leavemanagement.repositories.ManagerRepository;
 import ma.emsi.leavemanagement.services.Impl.LeaveBalanceService;
 import ma.emsi.leavemanagement.services.LeaveService;
 import  ma.emsi.leavemanagement.entities.Manager;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -66,9 +69,20 @@ public class LeaveControllerImpl implements LeaveController {
         return leaveService.declineLeaveRequest(idLeave, idManager);
     }
 
-    @GetMapping("/test")
-    public List<Manager> getManagers() {
-        return managerRepository.findAll();
+    @GetMapping("/test/{idManager}")
+    public List<Leave> getManagers(@PathVariable("idManager") Long idManager) {
+        List<Leave> leaves = new ArrayList<>();
+
+        managerRepository.findById(idManager).get().getEmployees()
+            .forEach(emp -> {
+                leaves.addAll(emp.getLeaves());
+            });
+        return leaves;
+    }
+
+    @Override
+    public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(Long idManager) {
+        return leaveService.getLeavesUnderSupervision(idManager);
     }
     
 }

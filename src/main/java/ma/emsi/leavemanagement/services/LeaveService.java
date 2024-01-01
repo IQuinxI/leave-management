@@ -13,4 +13,5 @@ public interface LeaveService {
     public ResponseEntity<EntityModel<Leave>> approveLeaveRequest(Long idLeave, Long idManager);
     public ResponseEntity<EntityModel<Leave>> declineLeaveRequest(Long idLeave, Long idManager);
     public Leave cancelLeave(Long idLeave);
+    public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(Long idManager);
 }

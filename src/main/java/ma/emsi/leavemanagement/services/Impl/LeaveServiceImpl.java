@@ -2,14 +2,13 @@ package ma.emsi.leavemanagement.services.Impl;
 
 import lombok.AllArgsConstructor;
 import ma.emsi.leavemanagement.assemblers.LeaveAssembler;
+import ma.emsi.leavemanagement.controllers.LeaveControllerImpl;
 import ma.emsi.leavemanagement.entities.Leave;
 import ma.emsi.leavemanagement.entities.Manager;
 import ma.emsi.leavemanagement.entities.Person;
 import ma.emsi.leavemanagement.enums.Approbation;
 import ma.emsi.leavemanagement.enums.LeaveStatus;
 import ma.emsi.leavemanagement.exceptions.*;
-import ma.emsi.leavemanagement.exceptions.LeaveNotFoundException;
-import ma.emsi.leavemanagement.exceptions.ManagerDoesNotOverseeEmployeeException;
 import ma.emsi.leavemanagement.repositories.LeaveRepository;
 import ma.emsi.leavemanagement.repositories.ManagerRepository;
 import ma.emsi.leavemanagement.repositories.PersonRepository;
@@ -25,6 +24,10 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,13 +89,13 @@ public class LeaveServiceImpl implements LeaveService {
 	@Override
 	public Leave cancelLeave(Long idLeave) {
 		Leave canceledLeave = leaveRepository.findById(idLeave)
-				.orElseThrow(()->new LeaveNotFoundException(idLeave));
+				.orElseThrow(() -> new LeaveNotFoundException(idLeave));
 
 		canceledLeave.setApprobation(Approbation.NONE);
 		canceledLeave.setStatus(LeaveStatus.CANCELLED);
 		return canceledLeave;
 	}
-	
+
 	@Override
 	public ResponseEntity<EntityModel<Leave>> approveLeaveRequest(Long idLeave, Long idManager) {
 		return approbation(idLeave, idManager, LeaveStatus.ACCEPTED);
@@ -107,7 +110,6 @@ public class LeaveServiceImpl implements LeaveService {
 		managerRepository.findById(idManager)
 				.orElseThrow(() -> new EmployeeNotFoundException());
 
-
 		// checks if the Leave request already exists
 		Leave leave = leaveRepository.findById(idLeave)
 				.orElseThrow(() -> new LeaveNotFoundException(idLeave));
@@ -116,8 +118,8 @@ public class LeaveServiceImpl implements LeaveService {
 		// uses JPA to find the employee id inside the list of employees
 		Long idEmployee = leave.getPerson().getId();
 		List<Manager> emp = managerRepository.findByIdAndEmployees_Id(idManager, idEmployee);
-		if(emp.size() == 0) 
-			throw  new ManagerDoesNotOverseeEmployeeException();
+		if (emp.size() == 0)
+			throw new ManagerDoesNotOverseeEmployeeException();
 
 		// checks if the Leave request is pending
 		leaveValidators.leaveRequestIsPending(leave);
@@ -133,5 +135,25 @@ public class LeaveServiceImpl implements LeaveService {
 				.created(leaveEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
 				.body(leaveEntityModel);
 	}
-	
+
+	@Override
+	public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(Long idManager) {
+		List<Leave> leaves = new ArrayList<>();
+
+		managerRepository.findById(idManager).get().getEmployees()
+				.forEach(emp -> {
+					leaves.addAll(emp.getLeaves());
+				});
+
+		CollectionModel<EntityModel<Leave>> collectionModel = CollectionModel.of(
+				leaves
+					.stream()
+					.map(leaveAssembler::toModel)
+					.collect(Collectors.toList()
+				),
+				linkTo(methodOn(LeaveControllerImpl.class).getLeavesUnderSupervision(idManager)).withSelfRel());
+				
+		return collectionModel;
+	}
+
 }
