@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import ma.emsi.leavemanagement.entities.Employee;
 import ma.emsi.leavemanagement.entities.Manager;
 
 /**
@@ -11,5 +12,5 @@ import ma.emsi.leavemanagement.entities.Manager;
  */
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
       List<Manager>  findByIdAndEmployees_Id(Long idManager, Long idEmployee);
-
+      // List<Employee> findBy
 }

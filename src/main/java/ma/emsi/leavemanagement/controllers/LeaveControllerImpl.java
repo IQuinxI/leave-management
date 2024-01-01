@@ -3,8 +3,12 @@ package ma.emsi.leavemanagement.controllers;
 
 import lombok.AllArgsConstructor;
 import ma.emsi.leavemanagement.entities.Leave;
+import ma.emsi.leavemanagement.repositories.ManagerRepository;
 import ma.emsi.leavemanagement.services.Impl.LeaveBalanceService;
 import ma.emsi.leavemanagement.services.LeaveService;
+import  ma.emsi.leavemanagement.entities.Manager;
+
+import java.util.List;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -24,6 +28,7 @@ public class LeaveControllerImpl implements LeaveController {
 
     private final LeaveService leaveService;
     private final LeaveBalanceService leaveBalanceService;
+    private final ManagerRepository managerRepository;
 
     @PostMapping("/{idPerson}")
     public ResponseEntity<Leave> submitLeaveRequest(@RequestBody Leave leave,@PathVariable Long idPerson){
@@ -60,4 +65,10 @@ public class LeaveControllerImpl implements LeaveController {
     public ResponseEntity<EntityModel<Leave>> declineLeaveRequest(@RequestParam ("idLeave") Long idLeave, @RequestParam("idManager") Long idManager) {
         return leaveService.declineLeaveRequest(idLeave, idManager);
     }
+
+    @GetMapping("/test")
+    public List<Manager> getManagers() {
+        return managerRepository.findAll();
+    }
+    
 }
