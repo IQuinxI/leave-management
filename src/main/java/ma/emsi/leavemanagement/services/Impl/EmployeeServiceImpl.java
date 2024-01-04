@@ -2,7 +2,6 @@ package ma.emsi.leavemanagement.services.Impl;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -13,7 +12,6 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -28,8 +26,6 @@ import ma.emsi.leavemanagement.exceptions.FieldIsEmptyOrNullException;
 import ma.emsi.leavemanagement.exceptions.TokenExpiredException;
 import ma.emsi.leavemanagement.repositories.EmployeeRepository;
 import ma.emsi.leavemanagement.repositories.auth.UserRepository;
-import ma.emsi.leavemanagement.security.JwtService;
-import ma.emsi.leavemanagement.utils.EmailServiceImpl;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -45,8 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         private final EmployeeRepository employeeRepository;
         private final UserRepository userRepository;
         private final EmployeeAssembler employeeAssembler;
-        private final EmailServiceImpl emailServiceImpl;
-        private final PasswordEncoder passwordEncoder;
+     
         
 
         @Override
@@ -131,7 +126,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 EntityModel<Employee> employeeEntityModel = employeeAssembler.toModel(employee);
                 System.out.println("localhost:8080/api/v1/employees/reset-password?token="+userAccount.getResetToken());
                 // sends an email to the User
-                // TODO: run this on a different Thread to not stop the app
                 // emailServiceImpl.sendPasswordVerificationEmail("aqwzsxcv123@gmail.com", "Password Reset", """
                 //                 Hello User,
                 //                 This is a test of the Leave management system.

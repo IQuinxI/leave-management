@@ -3,10 +3,12 @@ package ma.emsi.leavemanagement.validators;
 import lombok.AllArgsConstructor;
 import ma.emsi.leavemanagement.entities.Leave;
 import ma.emsi.leavemanagement.entities.Person;
+import ma.emsi.leavemanagement.enums.LeaveStatus;
 import ma.emsi.leavemanagement.enums.LeaveType;
 import ma.emsi.leavemanagement.exceptions.InsufficientBalanceException;
 import ma.emsi.leavemanagement.exceptions.InvalidLeaveDateException;
 import ma.emsi.leavemanagement.exceptions.InvalidLeaveTypeException;
+import ma.emsi.leavemanagement.exceptions.LeaveRequestIsClosedException;
 import ma.emsi.leavemanagement.services.PersonService;
 import org.springframework.stereotype.Component;
 
@@ -25,13 +27,12 @@ public class LeaveValidators {
 
     private void validateLeaveType(Leave leave) {
 
-            String type = leave.getLeaveType().name();
-            if(!type.equals("UNPAID") && !type.equals("ANNUAL") &&!type.equals("SICK") && !type.equals("MATERNITY")){
-                throw new InvalidLeaveTypeException("Invalid leave type: " + leave.getLeaveType());
+        String type = leave.getLeaveType().name();
+        if (!type.equals("UNPAID") && !type.equals("ANNUAL") && !type.equals("SICK") && !type.equals("MATERNITY")) {
+            throw new InvalidLeaveTypeException("Invalid leave type: " + leave.getLeaveType());
 
-            }
+        }
     }
-
 
     private void validateLeaveDateRange(Leave leave) {
         Date startDate = leave.getStartDate();
@@ -56,4 +57,11 @@ public class LeaveValidators {
         int millisInDay = 24 * 60 * 60 * 1000;
         return (int) ((leave.getEndDate().getTime() - leave.getStartDate().getTime()) / millisInDay) + 1;
     }
+
+    public void leaveRequestIsPending(Leave leave) {
+        if(! leave.getStatus().equals(LeaveStatus.PENDING)) 
+            throw new LeaveRequestIsClosedException();
+        
+    }
+
 }

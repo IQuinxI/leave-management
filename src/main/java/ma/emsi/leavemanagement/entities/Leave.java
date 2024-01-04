@@ -44,6 +44,6 @@ public class Leave {
     @JoinColumn(name = "employee_id")
     private Person person;
 
-
+    
 }
 

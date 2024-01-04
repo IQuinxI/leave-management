@@ -1,7 +1,6 @@
 package ma.emsi.leavemanagement.configuration;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ma.emsi.leavemanagement.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 // import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 // import org.springframework.web.cors.reactive.CorsConfigurationSource;
 
-import java.util.List;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 

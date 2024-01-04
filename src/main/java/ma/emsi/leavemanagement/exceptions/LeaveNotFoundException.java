@@ -5,6 +5,10 @@ public class LeaveNotFoundException extends RuntimeException{
         super(message);
     }
 
+    public LeaveNotFoundException(Long idLeave) {
+        super("Leave not found with id : " + idLeave);
+    }
+
     public LeaveNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }

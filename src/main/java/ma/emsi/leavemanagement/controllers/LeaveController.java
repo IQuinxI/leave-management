@@ -12,8 +12,14 @@ import ma.emsi.leavemanagement.entities.Leave;
 public interface LeaveController {
 
     public ResponseEntity<Leave> submitLeaveRequest(Leave leave, Long idPerson);
+
     public CollectionModel<EntityModel<Leave>> getAllLeaves(Long idPerson);
+
+    public ResponseEntity<EntityModel<Leave>> approveLeaveRequest(Long idLeave, Long idManager);
+
     public ResponseEntity<Leave> cancelLeaveRequest(Long idLeave);
 
+    public ResponseEntity<EntityModel<Leave>> declineLeaveRequest(Long idLeave, Long idManager);
 
+    public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(Long idManager);
 }
