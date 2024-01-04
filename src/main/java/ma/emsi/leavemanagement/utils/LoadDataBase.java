@@ -41,7 +41,7 @@ public class LoadDataBase {
 
                         // initializes the user accounts
                         userRepository.save(User.builder()
-                                        .email("user3")
+                                        .email("aqwzsxcv123@gmail.com")
                                         .password(passwordEncoder.encode("user3"))
                                         .role(Role.USER)
                                         .build());
@@ -79,7 +79,7 @@ public class LoadDataBase {
                                         .maternityBalance(190)
                                         .sickBalance(13)
                                         .salary(BigDecimal.valueOf(15000))
-                                        .userAccount(userRepository.findById(2l).get())
+                                        .userAccount(userRepository.findById(1l).get())
                                         .build());
                         managerRepository.save(Manager.builder()
                                         .firstName("fnManager2")

@@ -17,7 +17,7 @@ public class EmailServiceImpl {
     private final JavaMailSender mailSender;
 
     @Async
-    public void sendPasswordVerificationEmail(String to, String subject, String message) {
+    public void sendEmail(String to, String subject, String message) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("noreply@emsi.ma");
         simpleMailMessage.setTo(to);
