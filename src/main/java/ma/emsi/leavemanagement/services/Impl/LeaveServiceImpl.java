@@ -159,6 +159,7 @@ public class LeaveServiceImpl implements LeaveService {
 		// convert the list into a collectionModel
 		CollectionModel<EntityModel<Leave>> collectionModel = CollectionModel.of(leaves
 						.stream()
+						.filter(leave -> leave.getApprobation() == Approbation.APPRO_MANAGER)
 						.map(leaveAssembler::toModel)
 						.collect(Collectors.toList()),
 				linkTo(methodOn(LeaveControllerImpl.class).getLeavesUnderSupervision(idManager)).withSelfRel());

@@ -1,6 +1,7 @@
 package ma.emsi.leavemanagement.utils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 
@@ -130,15 +131,15 @@ public class LoadDataBase {
                                         .sickBalance(10)
                                         .salary(BigDecimal.valueOf(10000))
                                         .poste("poste1")
-                                        .manager(managerRepository.findById(2l).get())
+                                        .manager(managerRepository.findById(1l).get())
                                         .userAccount(userRepository.findById(5l).get())
                                         .build());
 
                         // initializes the leave requests
                         leaveRepository.save(Leave.builder()
                                         .createdAt(Date.from(Instant.now()))
-                                        .endDate(Date.from(Instant.now().plusSeconds(9000)))
-                                        .startDate(Date.from(Instant.now().plusSeconds(3000)))
+                                        .endDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-16"))
+                                        .startDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-05"))
                                         .leaveType(LeaveType.UNPAID)
                                         .status(LeaveStatus.PENDING)
                                         .approbation(Approbation.APPRO_MANAGER)
@@ -146,8 +147,8 @@ public class LoadDataBase {
                                         .build());
                         leaveRepository.save(Leave.builder()
                                         .createdAt(Date.from(Instant.now()))
-                                        .endDate(Date.from(Instant.now().plusSeconds(9000)))
-                                        .startDate(Date.from(Instant.now().plusSeconds(3000)))
+                                        .endDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-10"))
+                                        .startDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-04"))
                                         .leaveType(LeaveType.MATERNITY)
                                         .status(LeaveStatus.PENDING)
                                         .approbation(Approbation.APPRO_MANAGER)
@@ -156,40 +157,14 @@ public class LoadDataBase {
 
                         leaveRepository.save(Leave.builder()
                                         .createdAt(Date.from(Instant.now()))
-                                        .endDate(Date.from(Instant.now().plusSeconds(9000)))
-                                        .startDate(Date.from(Instant.now().plusSeconds(3000)))
+                                        .endDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-20"))
+                                        .startDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-06"))
                                         .leaveType(LeaveType.MATERNITY)
                                         .status(LeaveStatus.PENDING)
                                         .approbation(Approbation.APPRO_MANAGER)
                                         .person(employeeRepository.findById(5l).get())
                                         .build());
-                        // // initializes the employees accounts
-                        // employeeRepository.save(Employee.builder()
-                        // .firstName("firstname1")
-                        // .lastName("lastname1")
-                        // .phone("069729387")
-                        // .soldePaye(20)
-                        // .soldeNonPaye(100)
-                        // .soldeMaternité(100)
-                        // .soldeMaladie(10)
-                        // .salary(BigDecimal.valueOf(10000))
-                        // .poste("poste1")
-                        // .userAccount(userRepository.findById(1l).get())
-                        // .build());
-                        //
-                        // employeeRepository.save(Employee.builder()
-                        // .firstName("firstname2")
-                        // .lastName("lastname2")
-                        // .phone("069872312")
-                        // .soldePaye(15)
-                        // .soldeNonPaye(10)
-                        // .soldeMaternité(75)
-                        // .soldeMaladie(5)
-                        // .salary(BigDecimal.valueOf(5000))
-                        // .poste("poste2")
-                        // .userAccount(userRepository.findById(2l).get())
-                        // .build());
-                        //
+
                 };
         }
 }
