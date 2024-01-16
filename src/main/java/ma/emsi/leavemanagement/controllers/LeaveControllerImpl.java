@@ -3,17 +3,23 @@ package ma.emsi.leavemanagement.controllers;
 
 import lombok.AllArgsConstructor;
 import ma.emsi.leavemanagement.entities.Leave;
+import ma.emsi.leavemanagement.enums.LeaveStatus;
+import ma.emsi.leavemanagement.repositories.LeaveRepository;
 import ma.emsi.leavemanagement.services.Impl.LeaveBalanceService;
 import ma.emsi.leavemanagement.services.LeaveService;
 
+import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -67,5 +73,7 @@ public class LeaveControllerImpl implements LeaveController {
     public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(@PathVariable("idManager") Long idManager) {
         return leaveService.getLeavesUnderSupervision(idManager);
     }
+
+
     
 }

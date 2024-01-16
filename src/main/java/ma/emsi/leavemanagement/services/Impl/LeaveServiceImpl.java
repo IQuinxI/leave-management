@@ -10,6 +10,7 @@ import ma.emsi.leavemanagement.entities.Supervisor;
 import ma.emsi.leavemanagement.entities.auth.User;
 import ma.emsi.leavemanagement.enums.Approbation;
 import ma.emsi.leavemanagement.enums.LeaveStatus;
+import ma.emsi.leavemanagement.enums.LeaveType;
 import ma.emsi.leavemanagement.exceptions.*;
 import ma.emsi.leavemanagement.repositories.LeaveRepository;
 import ma.emsi.leavemanagement.repositories.ManagerRepository;
@@ -59,16 +60,18 @@ public class LeaveServiceImpl implements LeaveService {
 		Person person = personRepository.findById(idPerson)
 				.orElseThrow(() -> new EmployeeNotFoundException(idPerson));
 
+		// retrieves the employee's account 
 		User account = userRepository.findById(person.getUserAccount().getId())
 				.orElseThrow(() -> new EmployeeNotFoundException());
-		System.out.println(account.getEmail());
-		emailServiceImpl.sendEmail(account.getEmail(), "Leave request submitted", """
-				Dear Employee,
-					Your leave request has been submitted, please wait for the response.
-				System,
-				""");
+
 		// validate leave inputs
 		leaveValidators.validateLeaveRequest(leave, person);
+
+		// check if there's a pending request already
+		List<Leave> pendingLeaves = leaveRepository.findByStatusAndPerson(LeaveStatus.PENDING, person);
+
+		if (pendingLeaves == null || pendingLeaves.size() != 0)
+			throw new LeaveInPendingAlreadyExistsException();
 
 		Leave savedLeave = Leave.builder()
 				.person(person)
@@ -79,6 +82,14 @@ public class LeaveServiceImpl implements LeaveService {
 				.status(LeaveStatus.PENDING)
 				.createdAt(new Date())
 				.build();
+
+		// TODO: uncomment it when in prod
+
+		// emailServiceImpl.sendEmail(account.getEmail(), "Leave request submitted", """
+		// Dear Employee,
+		// Your leave request has been submitted, please wait for the response.
+		// System,
+		// """);
 
 		return leaveRepository.save(savedLeave);
 
@@ -132,17 +143,17 @@ public class LeaveServiceImpl implements LeaveService {
 	private ResponseEntity<EntityModel<Leave>> approbation(Long idLeave, Long idManager, LeaveStatus leaveStatus) {
 		String subject = "";
 		String content = "";
-		if(leaveStatus.equals(LeaveStatus.ACCEPTED)) {
+		if (leaveStatus.equals(LeaveStatus.ACCEPTED)) {
 			subject = "Leave Approved";
 			content = """
-					Dear employeee, 
+					Dear employeee,
 					Your leave has been approved,
 					System,
 					""";
 		} else if (leaveStatus.equals(LeaveStatus.REJECTED)) {
 			subject = "Leave rejected";
 			content = """
-					Dear employeee, 
+					Dear employeee,
 					Your leave has been rejected,
 					System,
 					""";
