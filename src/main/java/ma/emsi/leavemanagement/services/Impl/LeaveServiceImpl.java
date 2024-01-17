@@ -10,7 +10,6 @@ import ma.emsi.leavemanagement.entities.Supervisor;
 import ma.emsi.leavemanagement.entities.auth.User;
 import ma.emsi.leavemanagement.enums.Approbation;
 import ma.emsi.leavemanagement.enums.LeaveStatus;
-import ma.emsi.leavemanagement.enums.LeaveType;
 import ma.emsi.leavemanagement.exceptions.*;
 import ma.emsi.leavemanagement.repositories.LeaveRepository;
 import ma.emsi.leavemanagement.repositories.ManagerRepository;
@@ -60,7 +59,7 @@ public class LeaveServiceImpl implements LeaveService {
 		Person person = personRepository.findById(idPerson)
 				.orElseThrow(() -> new EmployeeNotFoundException(idPerson));
 
-		// retrieves the employee's account 
+		// retrieves the employee's account
 		User account = userRepository.findById(person.getUserAccount().getId())
 				.orElseThrow(() -> new EmployeeNotFoundException());
 
@@ -122,11 +121,11 @@ public class LeaveServiceImpl implements LeaveService {
 		canceledLeave.setStatus(LeaveStatus.CANCELLED);
 
 		String email = canceledLeave.getPerson().getUserAccount().getEmail();
-		emailServiceImpl.sendEmail(email, "Leave request cancelled", """
-				Dear Employee,
-					Your leave request has been cancelled.
-				System,
-				""");
+		// emailServiceImpl.sendEmail(email, "Leave request cancelled", """
+		// Dear Employee,
+		// Your leave request has been cancelled.
+		// System,
+		// """);
 		return canceledLeave;
 	}
 
@@ -187,7 +186,7 @@ public class LeaveServiceImpl implements LeaveService {
 		User account = userRepository.findById(person.getUserAccount().getId())
 				.orElseThrow(() -> new EmployeeNotFoundException());
 		System.out.println(account.getEmail());
-		emailServiceImpl.sendEmail(account.getEmail(), subject, content);
+		// emailServiceImpl.sendEmail(account.getEmail(), subject, content);
 		// return a response entity
 		return ResponseEntity
 				.created(leaveEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -222,4 +221,29 @@ public class LeaveServiceImpl implements LeaveService {
 		return collectionModel;
 	}
 
+	@Override
+	public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervisorByStatus(Long idSupervisor,
+			LeaveStatus leaveStatus) {
+		List<Leave> leaves = new ArrayList<>();
+
+		// retrieve all employees under the manager
+		// and load the leaves in the leaves List
+		Supervisor supervisor = sueprvisorRepository.findById(idSupervisor)
+				.orElseThrow(() -> new EmployeeNotFoundException("Supervisor not found"));
+
+		leaves = supervisor.getEmployees()
+				.stream()
+				.flatMap(emp -> emp.getLeaves().stream()) // Combine leaves from all employees
+				.filter(leave -> leave.getStatus().equals(leaveStatus))
+				.collect(Collectors.toList());
+
+		CollectionModel<EntityModel<Leave>> leavesCollectionModel = CollectionModel
+				.of(leaves.stream()
+						.map(leaveAssembler::toModel)
+						.collect(Collectors.toList()));
+
+		return leavesCollectionModel;
+	}
+
+	
 }
