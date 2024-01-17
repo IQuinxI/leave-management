@@ -7,14 +7,18 @@ import ma.emsi.leavemanagement.entities.Leave;
 import ma.emsi.leavemanagement.entities.Manager;
 import ma.emsi.leavemanagement.entities.Person;
 import ma.emsi.leavemanagement.entities.Supervisor;
+import ma.emsi.leavemanagement.entities.auth.User;
 import ma.emsi.leavemanagement.enums.Approbation;
 import ma.emsi.leavemanagement.enums.LeaveStatus;
+import ma.emsi.leavemanagement.enums.LeaveType;
 import ma.emsi.leavemanagement.exceptions.*;
 import ma.emsi.leavemanagement.repositories.LeaveRepository;
 import ma.emsi.leavemanagement.repositories.ManagerRepository;
 import ma.emsi.leavemanagement.repositories.PersonRepository;
 import ma.emsi.leavemanagement.repositories.SupervisorRepository;
+import ma.emsi.leavemanagement.repositories.auth.UserRepository;
 import ma.emsi.leavemanagement.services.LeaveService;
+import ma.emsi.leavemanagement.utils.EmailServiceImpl;
 import ma.emsi.leavemanagement.validators.EmployeeValidator;
 import ma.emsi.leavemanagement.validators.LeaveValidators;
 
@@ -46,6 +50,8 @@ public class LeaveServiceImpl implements LeaveService {
 	private final LeaveAssembler leaveAssembler;
 	private final ManagerRepository managerRepository;
 	private final SupervisorRepository sueprvisorRepository;
+	private final EmailServiceImpl emailServiceImpl;
+	private UserRepository userRepository;
 
 	@Override
 	public Leave saveLeave(Leave leave, Long idPerson)
@@ -54,8 +60,18 @@ public class LeaveServiceImpl implements LeaveService {
 		Person person = personRepository.findById(idPerson)
 				.orElseThrow(() -> new EmployeeNotFoundException(idPerson));
 
+		// retrieves the employee's account 
+		User account = userRepository.findById(person.getUserAccount().getId())
+				.orElseThrow(() -> new EmployeeNotFoundException());
+
 		// validate leave inputs
 		leaveValidators.validateLeaveRequest(leave, person);
+
+		// check if there's a pending request already
+		List<Leave> pendingLeaves = leaveRepository.findByStatusAndPerson(LeaveStatus.PENDING, person);
+
+		if (pendingLeaves == null || pendingLeaves.size() != 0)
+			throw new LeaveInPendingAlreadyExistsException();
 
 		Leave savedLeave = Leave.builder()
 				.person(person)
@@ -66,6 +82,14 @@ public class LeaveServiceImpl implements LeaveService {
 				.status(LeaveStatus.PENDING)
 				.createdAt(new Date())
 				.build();
+
+		// TODO: uncomment it when in prod
+
+		// emailServiceImpl.sendEmail(account.getEmail(), "Leave request submitted", """
+		// Dear Employee,
+		// Your leave request has been submitted, please wait for the response.
+		// System,
+		// """);
 
 		return leaveRepository.save(savedLeave);
 
@@ -96,6 +120,13 @@ public class LeaveServiceImpl implements LeaveService {
 
 		canceledLeave.setApprobation(Approbation.NONE);
 		canceledLeave.setStatus(LeaveStatus.CANCELLED);
+
+		String email = canceledLeave.getPerson().getUserAccount().getEmail();
+		emailServiceImpl.sendEmail(email, "Leave request cancelled", """
+				Dear Employee,
+					Your leave request has been cancelled.
+				System,
+				""");
 		return canceledLeave;
 	}
 
@@ -110,6 +141,23 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	private ResponseEntity<EntityModel<Leave>> approbation(Long idLeave, Long idManager, LeaveStatus leaveStatus) {
+		String subject = "";
+		String content = "";
+		if (leaveStatus.equals(LeaveStatus.ACCEPTED)) {
+			subject = "Leave Approved";
+			content = """
+					Dear employeee,
+					Your leave has been approved,
+					System,
+					""";
+		} else if (leaveStatus.equals(LeaveStatus.REJECTED)) {
+			subject = "Leave rejected";
+			content = """
+					Dear employeee,
+					Your leave has been rejected,
+					System,
+					""";
+		}
 		managerRepository.findById(idManager)
 				.orElseThrow(() -> new EmployeeNotFoundException());
 
@@ -133,6 +181,13 @@ public class LeaveServiceImpl implements LeaveService {
 		// assemble the entity
 		EntityModel<Leave> leaveEntityModel = leaveAssembler.toModel(leave);
 
+		Person person = personRepository.findById(idEmployee)
+				.orElseThrow(() -> new EmployeeNotFoundException());
+
+		User account = userRepository.findById(person.getUserAccount().getId())
+				.orElseThrow(() -> new EmployeeNotFoundException());
+		System.out.println(account.getEmail());
+		emailServiceImpl.sendEmail(account.getEmail(), subject, content);
 		// return a response entity
 		return ResponseEntity
 				.created(leaveEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -158,10 +213,10 @@ public class LeaveServiceImpl implements LeaveService {
 
 		// convert the list into a collectionModel
 		CollectionModel<EntityModel<Leave>> collectionModel = CollectionModel.of(leaves
-						.stream()
-						.filter(leave -> leave.getApprobation() == Approbation.APPRO_MANAGER)
-						.map(leaveAssembler::toModel)
-						.collect(Collectors.toList()),
+				.stream()
+				.filter(leave -> leave.getApprobation() == Approbation.APPRO_MANAGER)
+				.map(leaveAssembler::toModel)
+				.collect(Collectors.toList()),
 				linkTo(methodOn(LeaveControllerImpl.class).getLeavesUnderSupervision(idManager)).withSelfRel());
 
 		return collectionModel;
