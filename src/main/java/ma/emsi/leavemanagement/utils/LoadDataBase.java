@@ -150,7 +150,7 @@ public class LoadDataBase {
                                         .endDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-10"))
                                         .startDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-04"))
                                         .leaveType(LeaveType.MATERNITY)
-                                        .status(LeaveStatus.PENDING)
+                                        .status(LeaveStatus.ACCEPTED)
                                         .approbation(Approbation.APPRO_MANAGER)
                                         .person(employeeRepository.findById(4l).get())
                                         .build());
@@ -160,7 +160,7 @@ public class LoadDataBase {
                                         .endDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-20"))
                                         .startDate(new SimpleDateFormat("yyyy-MM-dd").parse("2024-01-06"))
                                         .leaveType(LeaveType.MATERNITY)
-                                        .status(LeaveStatus.PENDING)
+                                        .status(LeaveStatus.CANCELLED)
                                         .approbation(Approbation.APPRO_MANAGER)
                                         .person(employeeRepository.findById(5l).get())
                                         .build());

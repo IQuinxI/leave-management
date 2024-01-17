@@ -5,6 +5,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 
 import ma.emsi.leavemanagement.entities.Leave;
+import ma.emsi.leavemanagement.enums.LeaveStatus;
 
 /**
  * LeaveController
@@ -22,4 +23,11 @@ public interface LeaveController {
     public ResponseEntity<EntityModel<Leave>> declineLeaveRequest(Long idLeave, Long idManager);
 
     public CollectionModel<EntityModel<Leave>> getLeavesUnderSupervision(Long idManager);
+
+    public CollectionModel<EntityModel<Leave>> getPendingLeavesUnderSupervisor(Long idSupervisor);
+
+    public CollectionModel<EntityModel<Leave>> getCancelledLeavesUnderSupervisor(Long idSupervisor);
+
+    public CollectionModel<EntityModel<Leave>> getAcceptedLeavesUnderSupervisor(Long idSupervisor);
+
 }

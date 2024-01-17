@@ -13,4 +13,5 @@ import ma.emsi.leavemanagement.enums.LeaveStatus;
 public interface LeaveRepository extends JpaRepository<Leave, Long> {
     public List<Leave> findByPerson(Person person);
     List<Leave> findByStatusAndPerson(LeaveStatus status, Person person);
+    List<Leave> findByStatus(LeaveStatus status);
 }
